@@ -10,10 +10,9 @@ class dump {
         $this->pdo = $pdo;
     }
 
-
     public function sendThese() {
         $sql = 'SELECT * FROM theses';
-        $req = $pdo->query($sql);
+        $req = $this->pdo->query($sql);
         while($row = $req->fetch()) {
             echo "<p>" . $row['author'] . " | " . $row['title'] . "</p>";
         }
