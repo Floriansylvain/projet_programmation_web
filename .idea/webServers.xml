@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="ded0c01e-cd21-4607-9325-b6998c1bfdc5" name="Sapinet" url="http://projet.floriansylvain.fr">
+        <fileTransfer rootFolder="/var/www/projet.floriansylvain.fr" accessType="SFTP" host="185.44.81.51" port="22" sshConfigId="76b70d3d-2174-4ce2-b40f-b0cf1f3cb031" sshConfig="root@185.44.81.51:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
