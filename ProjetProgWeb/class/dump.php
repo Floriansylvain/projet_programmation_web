@@ -10,25 +10,29 @@ class dump {
         $this->these = $these;
     }
 
+    public static function convertDate($old_date) : string {
+        return date("Y-m-d", strtotime($old_date));
+    }
+
     public function sendThese() {
         $data = [
             'author' => $this->these->getAuthor(),
-            'id_author' => $this->these->getIdAuthor(),
+            'id_author' => empty($this->these->getIdAuthor()) ? NULL : $this->these->getIdAuthor(),
             'these_director' => $this->these->getTheseDirector(),
             'title' => $this->these->getTitle(),
             'these_director_name_lastname' => $this->these->getTheseDirectorNameLastname(),
-            'id_director' => $this->these->getIdDirector(),
+            'id_director' => empty($this->these->getIdDirector())  ? NULL : $this->these->getIdDirector(),
             'soutenance_establishment' => $this->these->getSoutenanceEstablishment(),
-            'id_establishment' => $this->these->getIdEstablishment(),
+            'id_establishment' => empty($this->these->getIdEstablishment()) ? NULL : $this->these->getIdEstablishment(),
             'discipline' => $this->these->getDiscipline(),
             'status' => $this->these->getStatus(),
-            'date_first_registration' => $this->these->getDateFirstRegistration(),
-            'date_soutenance' => $this->these->getDateSoutenance(),
-            'language' => $this->these->getLanguage(),
-            'id_these' => $this->these->getIdThese(),
+            'date_first_registration' => empty($this->these->getDateFirstRegistration()) ? NULL : $this->these->getDateFirstRegistration(),
+            'date_soutenance' => empty($this->these->getDateSoutenance()) ? NULL : $this->these->getDateSoutenance(),
+            'language' => empty($this->these->getLanguage()) ? NULL : $this->these->getLanguage(),
+            'id_these' => empty($this->these->getIdThese()) ? NULL : $this->these->getIdThese(),
             'online' => $this->these->isOnline() ? "yes" : "no",
-            'date_publication' => $this->these->getDatePublication(),
-            'date_update' => $this->these->getDateUpdate()
+            'date_publication' => empty($this->these->getDatePublication()) ? NULL : $this->these->getDatePublication(),
+            'date_update' => empty($this->these->getDateUpdate()) ? NULL : $this->these->getDateUpdate()
         ];
         $sql = "INSERT INTO theses (author, id_author, these_director, title, these_director_name_lastname, id_director, soutenance_establishment, id_establishment, discipline, status, date_first_registration, date_soutenance, language, id_these, online, date_publication, date_update) VALUES (:author, :id_author, :these_director, :title, :these_director_name_lastname, :id_director, :soutenance_establishment, :id_establishment, :discipline, :status, :date_first_registration, :date_soutenance, :language, :id_these, :online, :date_publication, :date_update)";
         $pdo = new PDO('mysql:host=localhost;dbname=projet_prog_web', 'root', 'root');

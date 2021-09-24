@@ -1,5 +1,7 @@
 <?php
 
+use JetBrains\PhpStorm\Pure;
+
 class these {
     private string $author;
     private string $id_author;
@@ -19,43 +21,53 @@ class these {
     private string $date_publication;
     private string $date_update;
 
-    /**
-     * @param string $author
-     * @param string $id_author
-     * @param string $title
-     * @param string $these_director
-     * @param string $these_director_name_lastname
-     * @param string $id_director
-     * @param string $soutenance_establishment
-     * @param string $id_establishment
-     * @param string $discipline
-     * @param string $status
-     * @param string $date_first_registration
-     * @param string $date_soutenance
-     * @param string $language
-     * @param string $id_these
-     * @param bool $online
-     * @param string $date_publication
-     * @param string $date_update
-     */
-    public function __construct(string $author, string $id_author, string $title, string $these_director, string $these_director_name_lastname, string $id_director, string $soutenance_establishment, string $id_establishment, string $discipline, string $status, string $date_first_registration, string $date_soutenance, string $language, string $id_these, bool $online, string $date_publication, string $date_update) {
-        $this->author = $author;
-        $this->id_author = $id_author;
-        $this->title = $title;
-        $this->these_director = $these_director;
-        $this->these_director_name_lastname = $these_director_name_lastname;
-        $this->id_director = $id_director;
-        $this->soutenance_establishment = $soutenance_establishment;
-        $this->id_establishment = $id_establishment;
-        $this->discipline = $discipline;
-        $this->status = $status;
-        $this->date_first_registration = $date_first_registration;
-        $this->date_soutenance = $date_soutenance;
-        $this->language = $language;
-        $this->id_these = $id_these;
-        $this->online = $online;
-        $this->date_publication = $date_publication;
-        $this->date_update = $date_update;
+    #[Pure] public static function emptyThese(): these
+    {
+        return new self();
+    }
+
+    public static function fullThese(string $author, string $id_author, string $title, string $these_director, string $these_director_name_lastname, string $id_director, string $soutenance_establishment, string $id_establishment, string $discipline, string $status, string $date_first_registration, string $date_soutenance, string $language, string $id_these, bool $online, string $date_publication, string $date_update) {
+        $these = these::emptyThese();
+        $these->setAuthor($author);
+        $these->setIdAuthor($id_author);
+        $these->setTitle($title);
+        $these->setTheseDirector($these_director);
+        $these->setTheseDirectorNameLastname($these_director_name_lastname);
+        $these->setIdDirector($id_director);
+        $these->setSoutenanceEstablishment($soutenance_establishment);
+        $these->setIdEstablishment($id_establishment);
+        $these->setDiscipline($discipline);
+        $these->setStatus($status);
+        $these->setDateFirstRegistration($date_first_registration);
+        $these->setDateSoutenance($date_soutenance);
+        $these->setLanguage($language);
+        $these->setIdThese($id_these);
+        $these->setOnline($online);
+        $these->setDatePublication($date_publication);
+        $these->setDateUpdate($date_update);
+        return $these;
+    }
+
+    public function insertField($field, $index) {
+        switch ($index) {
+            case 0: $this->setAuthor($field); break;
+            case 1: $this->setIdAuthor($field); break;
+            case 2: $this->setTitle($field); break;
+            case 3: $this->setTheseDirector($field); break;
+            case 4: $this->setTheseDirectorNameLastname($field); break;
+            case 5: $this->setIdDirector($field); break;
+            case 6: $this->setSoutenanceEstablishment($field); break;
+            case 7: $this->setIdEstablishment($field); break;
+            case 8: $this->setDiscipline($field); break;
+            case 9: $this->setStatus($field); break;
+            case 10: $this->setDateFirstRegistration(dump::convertDate($field)); break;
+            case 11: $this->setDateSoutenance(dump::convertDate($field)); break;
+            case 12: $this->setLanguage($field); break;
+            case 13: $this->setIdThese($field); break;
+            case 14: $this->setOnline($field); break;
+            case 15: $this->setDatePublication(dump::convertDate($field)); break;
+            case 16: $this->setDateUpdate(dump::convertDate($field)); break;
+        }
     }
 
     /**
