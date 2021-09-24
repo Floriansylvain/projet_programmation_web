@@ -17,7 +17,7 @@ class these {
     private string $date_soutenance;
     private string $language;
     private string $id_these;
-    private bool $online;
+    private string $online;
     private string $date_publication;
     private string $date_update;
 
@@ -26,7 +26,7 @@ class these {
         return new self();
     }
 
-    public static function fullThese(string $author, string $id_author, string $title, string $these_director, string $these_director_name_lastname, string $id_director, string $soutenance_establishment, string $id_establishment, string $discipline, string $status, string $date_first_registration, string $date_soutenance, string $language, string $id_these, bool $online, string $date_publication, string $date_update) {
+    public static function fullThese(string $author, string $id_author, string $title, string $these_director, string $these_director_name_lastname, string $id_director, string $soutenance_establishment, string $id_establishment, string $discipline, string $status, string $date_first_registration, string $date_soutenance, string $language, string $id_these, string $online, string $date_publication, string $date_update) {
         $these = these::emptyThese();
         $these->setAuthor($author);
         $these->setIdAuthor($id_author);
@@ -295,17 +295,17 @@ class these {
     }
 
     /**
-     * @return bool
+     * @return string
      */
-    public function isOnline(): bool
+    public function getOnline(): string
     {
         return $this->online;
     }
 
     /**
-     * @param bool $online
+     * @param string $online
      */
-    public function setOnline(bool $online): void
+    public function setOnline(string $online): void
     {
         $this->online = $online;
     }

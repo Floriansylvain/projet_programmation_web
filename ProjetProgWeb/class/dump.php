@@ -51,7 +51,7 @@ class dump {
             'date_soutenance' => empty($this->these->getDateSoutenance()) ? NULL : $this->these->getDateSoutenance(),
             'language' => empty($this->these->getLanguage()) ? NULL : $this->these->getLanguage(),
             'id_these' => empty($this->these->getIdThese()) ? NULL : $this->these->getIdThese(),
-            'online' => $this->these->isOnline() ? "yes" : "no",
+            'online' => $this->these->getOnline() == "oui" ? "yes" : "no",
             'date_publication' => empty($this->these->getDatePublication()) ? NULL : $this->these->getDatePublication(),
             'date_update' => empty($this->these->getDateUpdate()) ? NULL : $this->these->getDateUpdate()
         ];
