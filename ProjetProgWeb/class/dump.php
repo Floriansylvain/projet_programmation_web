@@ -21,13 +21,13 @@ class dump {
 
         $pdo = new PDO('mysql:host=localhost;dbname=projet_prog_web;charset=utf8', 'root', 'root');
         $stmt = $pdo->query("SELECT * FROM theses WHERE author = '$author';");
+        $i = 0;
         while ($obj = $stmt->fetchObject()) {
-            $i = 0;
-            $theses_array[`$i`] = array();
+            $theses_array[$i] = array();
             foreach ($obj as $elem) {
-                array_push($theses_array[`$i`], empty($elem) ? "NULL" : $elem);
-                $i++;
+                array_push($theses_array[$i], empty($elem) ? "NULL" : $elem);
             }
+            $i++;
         }
 
         return $theses_array;
