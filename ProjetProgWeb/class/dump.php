@@ -1,6 +1,7 @@
 <?php
 
 require_once("these.php");
+require_once("conf.php");
 
 class dump {
     private these $these;
@@ -19,7 +20,8 @@ class dump {
     public static function getTheseByAuthor($author) : array {
         $theses_array = [];
 
-        $pdo = new PDO('mysql:host=localhost;dbname=projet_prog_web;charset=utf8', 'root', 'root');
+        $pdo_obj = new conf();
+        $pdo = $pdo_obj->getPDO();
         $stmt = $pdo->query("SELECT * FROM theses WHERE author = '$author';");
         $i = 0;
         while ($obj = $stmt->fetchObject()) {
@@ -54,7 +56,8 @@ class dump {
             'date_update' => empty($this->these->getDateUpdate()) ? NULL : $this->these->getDateUpdate()
         ];
         $sql = "INSERT INTO theses (author, id_author, these_director, title, these_director_name_lastname, id_director, soutenance_establishment, id_establishment, discipline, status, date_first_registration, date_soutenance, language, id_these, online, date_publication, date_update) VALUES (:author, :id_author, :these_director, :title, :these_director_name_lastname, :id_director, :soutenance_establishment, :id_establishment, :discipline, :status, :date_first_registration, :date_soutenance, :language, :id_these, :online, :date_publication, :date_update)";
-        $pdo = new PDO('mysql:host=localhost;dbname=projet_prog_web', 'root', 'root');
+        $pdo_obj = new conf();
+        $pdo = $pdo_obj->getPDO();
         $stmt= $pdo->prepare($sql);
         $stmt->execute($data);
     }

@@ -1,6 +1,5 @@
 <?php
 
-require_once("../conf.php");
 require_once("../class/these.php");
 require_once("../class/dump.php");
 
