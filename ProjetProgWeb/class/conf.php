@@ -1,15 +1,13 @@
 <?php
 
+require_once('dotEnv.php');
+(new DotEnv(__DIR__ . '/../.env'))->load();
+
 class conf
 {
     private pdo $pdo;
 
-    public function __construct()
-    {
-        $this->pdo = new PDO('mysql:host=localhost;dbname=projet_prog_web', 'root', 'root');
-    }
-
     public function getPDO() : pdo {
-        return $this->pdo;
+        return new PDO('mysql:host=localhost;dbname=' . getenv('DBNAME'), getenv('USERNAME'), getenv('PASSWORD'));
     }
 }
