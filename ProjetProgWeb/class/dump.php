@@ -1,5 +1,7 @@
 <?php
 
+require_once("these.php");
+
 class dump {
     private these $these;
 
@@ -12,6 +14,23 @@ class dump {
 
     public static function convertDate($old_date) : string {
         return date("Y-m-d", strtotime($old_date));
+    }
+
+    public static function getTheseByAuthor($author) : array {
+        $theses_array = [];
+
+        $pdo = new PDO('mysql:host=localhost;dbname=projet_prog_web;charset=utf8', 'root', 'root');
+        $stmt = $pdo->query("SELECT * FROM theses WHERE author = '$author';");
+        while ($obj = $stmt->fetchObject()) {
+            $i = 0;
+            $theses_array[`$i`] = array();
+            foreach ($obj as $elem) {
+                array_push($theses_array[`$i`], empty($elem) ? "NULL" : $elem);
+                $i++;
+            }
+        }
+
+        return $theses_array;
     }
 
     public function sendThese() {
@@ -39,5 +58,4 @@ class dump {
         $stmt= $pdo->prepare($sql);
         $stmt->execute($data);
     }
-
 }
