@@ -2,9 +2,14 @@
 
 require_once("../class/these.php");
 require_once("../class/dump.php");
+require_once("../class/conf.php");
 
+if (($handle = fopen("2021-09-15-theses.csv", "r")) !== FALSE) {
 
-if (($handle = fopen("dump_abes_thesesfr.csv", "r")) !== FALSE) {
+    $pdo_obj = new conf();
+    $pdo = $pdo_obj->getPDO();
+    $stmt = $pdo->query("TRUNCATE `projet_prog_web`.`theses`");
+
     $row = 1;
     $new_these = these::emptyThese();
     while (($data = fgetcsv($handle, 10000, ";")) !== FALSE) {
@@ -14,9 +19,14 @@ if (($handle = fopen("dump_abes_thesesfr.csv", "r")) !== FALSE) {
                 $new_these->insertField($data[$c], $c);
             }
             $dump = new dump($new_these);
-            $dump->sendThese();
+            try {
+                $dump->sendThese();
+            } catch (Exception) {
+                echo "<br><br>Failed on (" . $row .") :<br>";
+                var_dump($new_these);
+            }
         } $row++;
     }
     fclose($handle);
-    echo "CSV file imported into DB.";
+    echo "<br><br>CSV file imported into DB. (" . $row . " results)";
 }

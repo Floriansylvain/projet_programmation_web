@@ -1,5 +1,7 @@
 <?php
 
+ini_set('max_execution_time', 0);
+
 require_once("these.php");
 require_once("conf.php");
 
@@ -22,7 +24,7 @@ class dump {
 
         $pdo_obj = new conf();
         $pdo = $pdo_obj->getPDO();
-        $stmt = $pdo->query("SELECT * FROM theses WHERE author = '$author';");
+        $stmt = $pdo->query("SELECT * FROM theses WHERE author LIKE '%$author%';");
         $i = 0;
         while ($obj = $stmt->fetchObject()) {
             $theses_array[$i] = array();

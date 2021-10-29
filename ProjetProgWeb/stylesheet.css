@@ -64,8 +64,25 @@ body {
     display: none;
 }
 
-pre {
+#results {
+    font-family: sans-serif;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
     overflow: scroll;
+}
+
+.result-element {
+    box-shadow: rgba(0, 0, 0, 0.10) 2px 2px 8px;
+    background-color: rgba(250, 250, 250, 0.5);
+    border-radius: 3px;
+    margin: 0 5px 5px 5px;
+    padding: 5px 10px 10px 10px;
+}
+
+.error {
+    color: red;
 }
 
 /* Small  */
