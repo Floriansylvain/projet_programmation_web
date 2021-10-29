@@ -20,6 +20,7 @@
                 }
             }
         ?>
+        <div id="results-count"></div>
         <div id="results"></div>
     </body>
 </html>
