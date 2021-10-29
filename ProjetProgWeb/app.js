@@ -1,4 +1,3 @@
-
 let authorName = "";
 
 function requestToApi(author) {
@@ -9,6 +8,7 @@ function requestToApi(author) {
 }
 
 function displayResults(results) {
+    document.getElementsByClassName('loader')[0].style.display = "block"
     let count = 0
     results.forEach(function(elem) {
         let result = document.createElement('div')
@@ -26,4 +26,5 @@ function displayResults(results) {
     let nb = document.createElement("p")
     nb.innerHTML = `Nombre de résultats pour "${authorName}": ${count}.`
     document.getElementById('results-count').appendChild(nb)
+    document.getElementsByClassName('loader')[0].style.display = "none"
 }
