@@ -1,0 +1,89 @@
+/* Extra small */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    display: block;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.navbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: rgba(57, 180, 231, 0.50);
+    box-shadow: rgba(0, 0, 0, 0.15) 2px 2px 5px;
+    height: 75px;
+    padding: 10px;
+    width: 100%;
+    font-family: sans-serif;
+}
+
+.navbar-input {
+    box-shadow: rgba(0, 0, 0, 0.15) 0 2px 5px;
+    border-radius: 15px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background-color: white;
+}
+
+.navbar input {
+    border-radius: 15px;
+    outline: none;
+    border: none;
+    height: 100%;
+    font-size: 18px;
+    padding: 15px 5px 15px 15px;
+    width: 100%;
+}
+
+.navbar img {
+    background: white;
+    border-radius: 100px;
+    width: 50px;
+    right: 5px;
+    padding: 10px;
+    box-shadow: rgba(0, 0, 0, 0.15) 4px 2px 5px;
+    cursor: pointer;
+}
+
+.navbar button {
+    border: none;
+    background: none;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar h1 {
+    display: none;
+}
+
+pre {
+    overflow: scroll;
+}
+
+/* Small  */
+@media (min-width: 576px) {
+
+}
+
+/* Medium */
+@media (min-width: 768px) {
+
+}
+
+/* Large */
+@media (min-width: 992px) {
+
+}
+
+/* Extra large  */
+@media (min-width: 1200px) {
+
+}
