@@ -12,11 +12,11 @@
     <body>
         <?php
             include("navbar.php");
-            if (isset($_POST['author'])) {
-                if (strlen($_POST['author']) < 3) {
+            if (isset($_GET['author'])) {
+                if (strlen($_GET['author']) < 3) {
                     echo "<p class='error'>Veuillez entrer 3 caractères minimum.</p>";
                 } else {
-                    echo "<script>requestToApi('" . $_POST['author'] . "')</script>";
+                    echo "<script>requestToApi('" . $_GET['author'] . "')</script>";
                 }
             }
         ?>
