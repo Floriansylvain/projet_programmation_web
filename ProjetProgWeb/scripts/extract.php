@@ -3,12 +3,15 @@
 require_once("../class/these.php");
 require_once("../class/dump.php");
 require_once("../class/conf.php");
+require_once('../class/dotEnv.php');
+
+(new DotEnv(__DIR__ . '/../.env'))->load();
 
 if (($handle = fopen("2021-09-15-theses.csv", "r")) !== FALSE) {
 
     $pdo_obj = new conf();
     $pdo = $pdo_obj->getPDO();
-    $stmt = $pdo->query("TRUNCATE `projet_prog_web`.`theses`");
+    $stmt = $pdo->query("TRUNCATE `" . getenv('DBNAME') ."`.`theses`");
 
     $row = 1;
     $new_these = these::emptyThese();
