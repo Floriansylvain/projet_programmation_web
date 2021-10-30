@@ -4,7 +4,6 @@ let suggestions = document.getElementById('suggestions')
 let searchBarButton = document.getElementById('search-button')
 let loader = document.getElementsByClassName('loader')[0]
 
-let last = new Date().getTime()
 let authorName = "";
 
 function requestToApi(author) {
@@ -16,7 +15,6 @@ function requestToApi(author) {
 }
 
 // TODO : Faire un système de page plutôt que de charger 10000 résultats en une fois s'il y en a 10000..
-
 function displayResults(results) {
     let count = 0
     results.forEach(function(elem) {
@@ -38,22 +36,27 @@ function displayResults(results) {
     loader.style.display = "none"
 }
 
+let lastSearch = ""
+let last = new Date().getTime()
+
 function realTimeDisplay() {
-    if (last === null || (new Date().getTime() - last) > 500) {
-        let search = document.getElementsByName("author")[0].value
-        if (search.length > 3) {
-            last = new Date().getTime()
-            fetch(`api.php?q=authors&author=${search}`)
-                .then(response => response.json())
-                .then(function(data) {
-                    suggestions.innerHTML = ""
-                    data.forEach(function(elem) {
-                        let name = document.createElement('p')
-                        name.innerHTML = elem
-                        suggestions.appendChild(name)
-                    })
+    let search = document.getElementsByName("author")[0].value
+    if (search.length > 3 && (search !== lastSearch || (new Date().getTime() - last) > 500)) {
+        lastSearch = search
+        last = new Date().getTime()
+        fetch(`api.php?q=authors&author=${search}`)
+            .then(response => response.json())
+            .then(function(data) {
+                suggestions.innerHTML = ""
+                data.forEach(function(elem) {
+                    let outsideTag = document.createElement('a')
+                    outsideTag.href = "index.php?author=" + elem
+                    let name = document.createElement('p')
+                    name.innerHTML = elem
+                    outsideTag.appendChild(name)
+                    suggestions.appendChild(outsideTag)
                 })
-        }
+            })
     }
 }
 
@@ -65,9 +68,11 @@ searchbar.addEventListener('focus', () => {
     searchBarButton.classList.add('animation-out')
 });
 searchbar.addEventListener('focusout', () => {
-    navbarForm.style.borderRadius = '15px'
-    suggestions.style.display = 'none'
-    searchBarButton.style.boxShadow = 'rgba(0, 0, 0, 0.15) 4px 2px 5px'
-    searchBarButton.classList.remove('animation-out')
-    searchBarButton.classList.add('animation-in')
+    if (!suggestions === document.activeElement) {
+        navbarForm.style.borderRadius = '15px'
+        suggestions.style.display = 'none'
+        searchBarButton.style.boxShadow = 'rgba(0, 0, 0, 0.15) 4px 2px 5px'
+        searchBarButton.classList.remove('animation-out')
+        searchBarButton.classList.add('animation-in')
+    }
 });
