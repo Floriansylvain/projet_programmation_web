@@ -24,12 +24,18 @@ class dump {
 
         $pdo_obj = new conf();
         $pdo = $pdo_obj->getPDO();
-        $stmt = $pdo->query("SELECT * FROM theses WHERE author LIKE '%$author%';");
+
+        $author = '%' . $author . '%';
+
+        $stmt = $pdo->prepare("SELECT * FROM theses WHERE author LIKE :author;");
+        $stmt->bindParam(':author', $author, PDO::PARAM_STR, 100);
+        $stmt->execute();
+
         $i = 0;
         while ($obj = $stmt->fetchObject()) {
             $theses_array[$i] = array();
             foreach ($obj as $elem) {
-                array_push($theses_array[$i], empty($elem) ? "NULL" : $elem);
+                array_push($theses_array[$i], empty($elem) ? "Non définit" : $elem);
             }
             $i++;
         }
