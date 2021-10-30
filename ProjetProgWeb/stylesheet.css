@@ -15,7 +15,8 @@ body {
 .navbar {
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: center;
+    flex-direction: column;
     background-color: rgba(57, 180, 231, 0.50);
     box-shadow: rgba(0, 0, 0, 0.15) 2px 2px 5px;
     height: 75px;
@@ -24,13 +25,17 @@ body {
     font-family: sans-serif;
 }
 
-.navbar-input {
+.research-section {
+    position: relative;
+    width: 100%;
+}
+
+.navbar-form {
     box-shadow: rgba(0, 0, 0, 0.15) 0 2px 5px;
     border-radius: 15px;
-    height: 35px;
+    height: 40px;
     display: flex;
     align-items: center;
-    width: 100%;
     background-color: white;
 }
 
@@ -40,29 +45,74 @@ body {
     border: none;
     height: 100%;
     font-size: 18px;
-    padding: 15px 5px 15px 15px;
+    padding: 20px 5px 20px 20px;
     width: 100%;
 }
 
-.navbar img {
-    background: white;
-    border-radius: 100px;
-    width: 50px;
-    right: 5px;
-    padding: 10px;
-    box-shadow: rgba(0, 0, 0, 0.15) 4px 2px 5px;
-    cursor: pointer;
-}
-
 .navbar button {
+    align-self: center;
+    height: 60px;
     border: none;
     background: none;
     margin: 0;
     padding: 0;
 }
 
+.navbar img {
+    border-radius: 50px;
+    width: 60px;
+    padding: 10px;
+    cursor: pointer;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.15) 4px 2px 5px;
+}
+
+.animation-in {
+    animation: bg-in 70ms linear;
+    box-shadow: rgba(0, 0, 0, 0.15) 4px 2px 5px;
+    animation-fill-mode: forwards;
+}
+
+.animation-out {
+    animation: bg-out 70ms linear;
+    box-shadow: none;
+    animation-fill-mode: forwards;
+}
+
+@keyframes bg-out {
+    from {background-color: rgba(255, 255, 255, 1.0);}
+    to {background-color: rgba(255, 255, 255, 0.0);}
+}
+@keyframes bg-in {
+    from {background-color: rgba(255, 255, 255, 0.0);}
+    to {background-color: rgba(255, 255, 255, 1.0);}
+}
+
 .navbar h1 {
     display: none;
+}
+
+#suggestions {
+    display: none;
+    position: absolute;
+    z-index: 10;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.15) 0 5px 5px;
+    border-radius: 0 0 15px 15px;
+    padding: 0 10px 10px 10px;
+    width: 100%;
+    border: none;
+    border-top: solid 1px lightgray;
+}
+
+#suggestions p {
+    padding: 10px;
+    margin: 5px;
+    border-radius: 10px;
+}
+
+#suggestions p:hover {
+    background-color: rgba(0, 0, 0, 0.05);
 }
 
 #results {
@@ -71,13 +121,12 @@ body {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    overflow: scroll;
 }
 
 #results-count {
     font-family: sans-serif;
-    margin: 15px;
     opacity: 50%;
+    margin: 0 0 0 15px;
 }
 
 .result-element {
@@ -93,9 +142,14 @@ body {
 }
 
 .loader {
+    display: none;
     width: 150px;
     height: 150px;
     align-self: center;
+    justify-self: center;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
 .loader svg {
