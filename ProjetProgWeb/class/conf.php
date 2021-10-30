@@ -8,6 +8,6 @@ class conf
     private pdo $pdo;
 
     public function getPDO() : pdo {
-        return new PDO('mysql:host=localhost;dbname=' . getenv('DBNAME'), getenv('USERNAME'), getenv('PASSWORD'));
+        return new PDO('mysql:host=localhost;charset=UTF8;dbname=' . getenv('DBNAME'), getenv('USERNAME'), getenv('PASSWORD'));
     }
 }

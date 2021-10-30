@@ -5,20 +5,12 @@
         <meta name="viewport"
               content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <script src="app.js"></script>
         <link rel="stylesheet" href="stylesheet.css">
         <title>Document</title>
     </head>
     <body>
         <?php
             include("navbar.php");
-            if (isset($_GET['author'])) {
-                if (strlen($_GET['author']) < 3) {
-                    echo "<p class='error'>Veuillez entrer 3 caractères minimum.</p>";
-                } else {
-                    echo "<script>requestToApi('" . $_GET['author'] . "')</script>";
-                }
-            }
         ?>
 
         <!-- La petite animation de chargement provient de :
@@ -39,5 +31,20 @@
 
         <div id="results-count"></div>
         <div id="results"></div>
+
+        <script src="app.js"></script>
+
+        <?php
+        if (isset($_GET['author'])) {
+            if (strlen($_GET['author']) < 3) {
+                echo "<p class='error'>Veuillez entrer 3 caractères minimum.</p>";
+            } else {
+                echo "<script>requestToApi('" . filter_var($_GET['author'], FILTER_SANITIZE_ADD_SLASHES) . "')</script>";
+            }
+        } else {
+            echo "<script>document.getElementsByClassName('loader')[0].style.display = \"none\"</script>";
+        }
+        ?>
+
     </body>
 </html>
