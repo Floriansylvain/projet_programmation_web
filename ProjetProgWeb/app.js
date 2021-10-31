@@ -17,7 +17,6 @@ function requestToApi(author) {
         document.querySelector('#results').innerHTML = ""
         loader.style.display = "block"
         authorName = author.replace(/[^a-zA-Z0-9]/g,'')
-        console.log(authorName)
         fetch(`api.php?q=theses&author=${author}`)
             .then(response => response.json())
             .then(data => displayResults(data))
