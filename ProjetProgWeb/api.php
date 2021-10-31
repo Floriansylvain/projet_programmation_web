@@ -21,6 +21,9 @@ $json_object = match ($q) {
     default => NULL,
 };
 
-// TODO : Rajouter la structure status message data
-$json = json_encode($json_object);
+$json = json_encode(array(
+    "status" => 200,
+    "message" => "Results : " . count($json_object), "data" => $json_object
+    ),JSON_PRETTY_PRINT);
+
 print_r($json);

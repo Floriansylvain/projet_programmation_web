@@ -13,8 +13,11 @@ let lastRequest = null
 function requestToApi(author) {
     if (lastRequest === null || (new Date().getTime() - lastRequest) > 1000) {
         lastRequest = new Date().getTime()
+        document.querySelector('#results-count').innerHTML = ""
+        document.querySelector('#results').innerHTML = ""
         loader.style.display = "block"
-        authorName = author
+        authorName = author.replace(/[^a-zA-Z0-9]/g,'')
+        console.log(authorName)
         fetch(`api.php?q=theses&author=${author}`)
             .then(response => response.json())
             .then(data => displayResults(data))
@@ -41,36 +44,33 @@ function displayResults(results) {
         error.classList.add("fade-in");
         errorMessage.innerHTML = results.message
         return;
-    }
+    } else if (results.status === 200) {
+        let count = 0
 
-    document.querySelector('#results-count').innerHTML = ""
-    document.querySelector('#results').innerHTML = ""
-
-    let count = 0
-
-    results.forEach(elem => {
-        let result = document.createElement('div')
-        result.classList.add('result-element')
-        let i = 0
-        elem.forEach(e => {
-            let child = document.createElement(i === 0 ? 'h1' : 'p')
-            child.innerText = e
-            result.appendChild(child)
-            i += 1
+        results.data.forEach(elem => {
+            let result = document.createElement('div')
+            result.classList.add('result-element')
+            let i = 0
+            elem.forEach(e => {
+                let child = document.createElement(i === 0 ? 'h1' : 'p')
+                child.innerText = e
+                result.appendChild(child)
+                i += 1
+            })
+            count += 1
+            document.getElementById('results').appendChild(result)
         })
-        count += 1
-        document.getElementById('results').appendChild(result)
-    })
 
-    let nb = document.createElement("p")
-    nb.innerHTML = `Nombre de résultats pour "${authorName}": ${count}.`
-    document.getElementById('results-count').appendChild(nb)
+        let nb = document.createElement("p")
+        nb.innerHTML = `Nombre de résultats pour "${authorName}": ${count}.`
+        document.getElementById('results-count').appendChild(nb)
 
-    loader.style.display = "none"
+        loader.style.display = "none"
 
-    elementsToFade = document.querySelectorAll(".result-element")
-    window.addEventListener('scroll', fadeIn);
-    fadeIn()
+        elementsToFade = document.querySelectorAll(".result-element")
+        window.addEventListener('scroll', fadeIn);
+        fadeIn()
+    }
 }
 
 let lastSearch = ""
@@ -78,16 +78,17 @@ let lastSuggestion = new Date().getTime()
 let suggestionsDisplayed = false
 
 function realTimeDisplay() {
-    let search = document.getElementsByName("author")[0].value
+    let search = document.querySelector('input[name=\'author\']').value
+    search = search.replace(/[^a-zA-Z0-9 ]/g,'')
     if (search.length > 3 && (search !== lastSearch || (new Date().getTime() - lastSuggestion) > 500)) {
         showSuggestions()
         lastSearch = search
         lastSuggestion = new Date().getTime()
         fetch(`api.php?q=authors&author=${search}`)
             .then(response => response.json())
-            .then(function(data) {
+            .then(results => {
                 suggestions.innerHTML = ""
-                data.forEach(elem => {
+                results.data.forEach(elem => {
                     let name = document.createElement('p')
                     name.innerHTML = elem
                     name.addEventListener('click', () => {
