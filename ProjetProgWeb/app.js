@@ -3,15 +3,24 @@ let searchBar = document.querySelector('#searchbar')
 let searchBarButton = document.querySelector('#search-button')
 let suggestions = document.querySelector('#suggestions')
 let loader = document.querySelector('.loader')
+let error = document.querySelector("#error")
+let errorMessage = document.querySelector("#error-message")
+let errorButton = document.querySelector("#error-button")
 
 let authorName = "";
+let lastRequest = null
 
 function requestToApi(author) {
-    loader.style.display = "block"
-    authorName = author
-    fetch(`api.php?q=theses&author=${author}`)
-        .then(response => response.json())
-        .then(data => displayResults(data))
+    if (lastRequest === null || (new Date().getTime() - lastRequest) > 1000) {
+        lastRequest = new Date().getTime()
+        loader.style.display = "block"
+        authorName = author
+        fetch(`api.php?q=theses&author=${author}`)
+            .then(response => response.json())
+            .then(data => displayResults(data))
+    } else {
+        alert('Veuillez attendre une seconde entre chaque recherche.')
+    }
 }
 
 let elementsToFade = null
@@ -26,6 +35,17 @@ function fadeIn() {
 
 // TODO : Faire un système de page plutôt que de charger 10000 résultats en une fois s'il y en a 10000..
 function displayResults(results) {
+
+    if (results.status === 400) {
+        loader.style.display = "none"
+        error.classList.add("fade-in");
+        errorMessage.innerHTML = results.message
+        return;
+    }
+
+    document.querySelector('#results-count').innerHTML = ""
+    document.querySelector('#results').innerHTML = ""
+
     let count = 0
 
     results.forEach(elem => {
@@ -54,15 +74,15 @@ function displayResults(results) {
 }
 
 let lastSearch = ""
-let last = new Date().getTime()
+let lastSuggestion = new Date().getTime()
 let suggestionsDisplayed = false
 
 function realTimeDisplay() {
     let search = document.getElementsByName("author")[0].value
-    if (search.length > 3 && (search !== lastSearch || (new Date().getTime() - last) > 500)) {
+    if (search.length > 3 && (search !== lastSearch || (new Date().getTime() - lastSuggestion) > 500)) {
         showSuggestions()
         lastSearch = search
-        last = new Date().getTime()
+        lastSuggestion = new Date().getTime()
         fetch(`api.php?q=authors&author=${search}`)
             .then(response => response.json())
             .then(function(data) {
@@ -71,8 +91,6 @@ function realTimeDisplay() {
                     let name = document.createElement('p')
                     name.innerHTML = elem
                     name.addEventListener('click', () => {
-                        document.querySelector('#results-count').innerHTML = ""
-                        document.querySelector('#results').innerHTML = ""
                         searchBar.value = elem
                         requestToApi(elem)
                     })
@@ -87,20 +105,18 @@ function showSuggestions() {
         navbarForm.style.borderRadius = '15px 15px 0 0'
         suggestions.style.display = 'block'
         searchBarButton.style.boxShadow = 'none'
-        searchBarButton.classList.remove('animation-in')
-        searchBarButton.classList.add('animation-out')
+        searchBarButton.classList.replace('animation-in', 'animation-out')
         suggestionsDisplayed = true
     }
 }
 
-document.addEventListener('click', function (e){
+document.addEventListener('click', e => {
     if (e.target.id !== 'suggestions' && e.target !== searchBar && e.target !== searchBarButton) {
         if (suggestionsDisplayed) {
             navbarForm.style.borderRadius = '15px'
             suggestions.style.display = 'none'
             searchBarButton.style.boxShadow = 'rgba(0, 0, 0, 0.15) 4px 2px 5px'
-            searchBarButton.classList.remove('animation-out')
-            searchBarButton.classList.add('animation-in')
+            searchBarButton.classList.replace('animation-out', 'animation-in')
             suggestionsDisplayed = false
         }
 
@@ -116,5 +132,16 @@ document.addEventListener('click', function (e){
                 cross.classList.remove('spin-fade')
             }
         }
+
+        if (e.target === errorButton) {
+            error.classList.replace('fade-in', 'fade-out')
+        }
     }
+})
+
+navbarForm.addEventListener('submit', e => {
+    e.preventDefault()
+    let data = new FormData(navbarForm)
+    searchBar.blur()
+    requestToApi(data.get('author'))
 })

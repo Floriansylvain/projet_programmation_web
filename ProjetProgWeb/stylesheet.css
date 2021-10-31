@@ -2,6 +2,7 @@
 
 * {
     box-sizing: border-box;
+    font-family: sans-serif;
 }
 
 body {
@@ -23,7 +24,6 @@ body {
     height: 75px;
     padding: 10px;
     width: 100%;
-    font-family: sans-serif;
 }
 
 .research-section {
@@ -139,7 +139,6 @@ body {
 }
 
 #results {
-    font-family: sans-serif;
     margin: 10px;
     display: flex;
     flex-direction: column;
@@ -147,7 +146,6 @@ body {
 }
 
 #results-count {
-    font-family: sans-serif;
     opacity: 50%;
     margin: 0 15px 0 15px;
 }
@@ -168,14 +166,49 @@ body {
     transform: translateX(0px);
     animation-fill-mode: forwards;
 }
+.fade-out {
+    animation: fade-out 250ms linear;
+    transition: 250ms;
+    transform: translateX(0px);
+    animation-fill-mode: forwards;
+}
 @keyframes fade-in {
     from { opacity: 0 }
     to { opacity: 100% }
 }
+@keyframes fade-out {
+    from { opacity: 100% }
+    to { opacity: 0 }
+}
 
-/*TODO : Faire une belle erreur*/
-.error {
-    color: red;
+#error {
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    background-color: #FF6F6F;
+    border: solid 3px #DE6161;
+    border-radius: 5px;
+    color: #302B2B;
+    width: 90%;
+    padding: 10px;
+    position: fixed;
+    bottom: 10px;
+    align-self: center;
+}
+
+#error-button {
+    fill: #302B2B;
+    width: 20px;
+    height: 20px;
+    background: #DE6161;
+    border-radius: 1px;
+    padding: 2px;
+    margin-left: auto;
+    border: 1px solid #824D4D;
+}
+
+#error-button:hover {
+    background: #CA5D5D;
 }
 
 .loader {

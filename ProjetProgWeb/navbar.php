@@ -9,10 +9,10 @@
         </svg>
 
         <div class="research-section">
-            <form action="index.php" method="GET" class="navbar-form">
+            <form class="navbar-form">
                 <input type="text" name="author" placeholder="nom auteur" onkeyup="realTimeDisplay()" id="searchbar">
-                <button>
-                    <img src="assets/search.svg" alt="search" id="search-button">
+                <button id="form-button">
+                    <img src="assets/search.svg" alt="search" id="search-button" class="animation-in">
                 </button>
             </form>
             <div id="suggestions"></div>

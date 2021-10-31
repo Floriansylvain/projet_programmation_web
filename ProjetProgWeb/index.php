@@ -6,7 +6,7 @@
               content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <link rel="stylesheet" href="stylesheet.css">
-        <title>Document</title>
+        <title>Theses FR</title>
     </head>
     <body>
         <?php
@@ -32,19 +32,14 @@
         <div id="results-count"></div>
         <div id="results"></div>
 
-        <script src="app.js"></script>
+        <div id="error">
+            <div id="error-message"></div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" id="error-button">
+                <path d="M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81 2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z"/>
+            </svg>
+        </div>
 
-        <?php
-        if (isset($_GET['author'])) {
-            if (strlen($_GET['author']) < 3) {
-                echo "<p class='error'>Veuillez entrer 3 caractères minimum.</p>";
-            } else {
-                echo "<script>requestToApi('" . filter_var($_GET['author'], FILTER_SANITIZE_ADD_SLASHES) . "')</script>";
-            }
-        } else {
-            echo "<script>document.getElementsByClassName('loader')[0].style.display = \"none\"</script>";
-        }
-        ?>
+        <script src="app.js"></script>
 
     </body>
 </html>
