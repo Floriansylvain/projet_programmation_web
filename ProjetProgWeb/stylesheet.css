@@ -10,14 +10,15 @@ body {
     margin: 0;
     padding: 0;
     width: 100%;
+    overflow-x: hidden;
 }
 
 .navbar {
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
-    background-color: rgba(57, 180, 231, 0.50);
+    gap: 10px;
+    background: linear-gradient(245deg, #39B4E7 -15%, #0096DC 110%);
     box-shadow: rgba(0, 0, 0, 0.15) 2px 2px 5px;
     height: 75px;
     padding: 10px;
@@ -48,6 +49,10 @@ body {
     padding: 20px 5px 20px 20px;
     width: 100%;
 }
+
+/*.navbar input:hover, .navbar input:focus {*/
+/*    box-shadow: rgba(0, 0, 0, 0.15) 0 2px 5px;*/
+/*}*/
 
 .navbar button {
     align-self: center;
@@ -120,6 +125,12 @@ body {
     background-color: rgba(0, 0, 0, 0.05);
 }
 
+#hamburger {
+    fill: white;
+    width: 45px;
+    height: 45px;
+}
+
 #results {
     font-family: sans-serif;
     margin: 10px;
@@ -131,17 +142,29 @@ body {
 #results-count {
     font-family: sans-serif;
     opacity: 50%;
-    margin: 0 0 0 15px;
+    margin: 0 15px 0 15px;
 }
 
+/*TODO : Faire des beaux panneaux expansibles*/
 .result-element {
     box-shadow: rgba(0, 0, 0, 0.10) 2px 2px 8px;
     background-color: rgba(250, 250, 250, 0.5);
     border-radius: 3px;
     margin: 0 5px 5px 5px;
     padding: 5px 10px 10px 10px;
+    transform: translateX(100px);
 }
 
+.fade-in {
+    animation: fade-in 250ms linear;
+    transition: 250ms;
+    transform: translateX(0px);
+    animation-fill-mode: forwards;
+}
+@keyframes fade-in {
+    from { opacity: 0 }
+    to { opacity: 100% }
+}
 
 /*TODO : Faire une belle erreur*/
 .error {
@@ -170,16 +193,16 @@ body {
     stroke-width: 20px;
 }
 .load.one {
-    stroke: #554d73;
+    stroke: #034E6E;
     animation: load 1.5s infinite;
 }
 .load.two {
-    stroke: #a496a4;
+    stroke: #1779A3;
     animation: load 1.5s infinite;
     animation-delay: 0.1s;
 }
 .load.three {
-    stroke: #a5a7bb;
+    stroke: #39B4E7;
     animation: load 1.5s infinite;
     animation-delay: 0.2s;
 }
@@ -188,15 +211,15 @@ body {
     animation: bounce 1s infinite ease-in-out;
 }
 .point.one {
-    fill: #a5a7bb;
+    fill: #39B4E7;
     animation-delay: 0s;
 }
 .point.two {
-    fill: #a496a4;
+    fill: #1779A3;
     animation-delay: 0.1s;
 }
 .point.three {
-    fill: #554d73;
+    fill: #034E6E;
     animation-delay: 0.2s;
 }
 
