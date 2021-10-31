@@ -1,8 +1,8 @@
-let navbarForm = document.querySelectorAll('.navbar-form')[0]
-let searchBar = document.querySelectorAll('#searchbar')[0]
-let searchBarButton = document.querySelectorAll('#search-button')[0]
-let suggestions = document.querySelectorAll('#suggestions')[0]
-let loader = document.querySelectorAll('.loader')[0]
+let navbarForm = document.querySelector('.navbar-form')
+let searchBar = document.querySelector('#searchbar')
+let searchBarButton = document.querySelector('#search-button')
+let suggestions = document.querySelector('#suggestions')
+let loader = document.querySelector('.loader')
 
 let authorName = "";
 
@@ -92,12 +92,26 @@ function showSuggestions() {
 
 document.addEventListener('click', function (e){
     if (e.target.id !== 'suggestions' && e.target !== searchBar && e.target !== searchBarButton) {
-        navbarForm.style.borderRadius = '15px'
-        suggestions.style.display = 'none'
-        searchBarButton.style.boxShadow = 'rgba(0, 0, 0, 0.15) 4px 2px 5px'
-        searchBarButton.classList.remove('animation-out')
-        searchBarButton.classList.add('animation-in')
-        suggestionsDisplayed = false
+        if (suggestionsDisplayed) {
+            navbarForm.style.borderRadius = '15px'
+            suggestions.style.display = 'none'
+            searchBarButton.style.boxShadow = 'rgba(0, 0, 0, 0.15) 4px 2px 5px'
+            searchBarButton.classList.remove('animation-out')
+            searchBarButton.classList.add('animation-in')
+            suggestionsDisplayed = false
+        }
+
+        if (e.target.id === 'hamburger' || e.target.id === 'hamburgerSvg' || e.target.id === 'crossSvg') {
+            let ham = document.querySelector('#hamburgerSvg')
+            let cross = document.querySelector('#crossSvg')
+            if (ham.classList.contains('spin-fade')) {
+                cross.classList.add('spin-fade')
+                ham.classList.remove('spin-fade')
+            }
+            else {
+                ham.classList.add('spin-fade')
+                cross.classList.remove('spin-fade')
+            }
+        }
     }
 })
-

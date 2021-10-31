@@ -50,6 +50,7 @@ body {
     width: 100%;
 }
 
+/* TODO : Ajouter une ombre quand on hover ou focus l'input (voir page google.com)*/
 /*.navbar input:hover, .navbar input:focus {*/
 /*    box-shadow: rgba(0, 0, 0, 0.15) 0 2px 5px;*/
 /*}*/
@@ -129,6 +130,16 @@ body {
     fill: white;
     width: 45px;
     height: 45px;
+}
+
+#hamburgerSvg, #crossSvg {
+    transition: 150ms;
+}
+
+.spin-fade {
+    transform-origin: center;
+    transform: rotate(90deg);
+    opacity: 0;
 }
 
 #results {
