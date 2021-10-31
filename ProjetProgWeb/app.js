@@ -68,12 +68,15 @@ function realTimeDisplay() {
             .then(function(data) {
                 suggestions.innerHTML = ""
                 data.forEach(elem => {
-                    let outsideTag = document.createElement('a')
-                    outsideTag.href = "index.php?author=" + elem
                     let name = document.createElement('p')
                     name.innerHTML = elem
-                    outsideTag.appendChild(name)
-                    suggestions.appendChild(outsideTag)
+                    name.addEventListener('click', () => {
+                        document.querySelector('#results-count').innerHTML = ""
+                        document.querySelector('#results').innerHTML = ""
+                        searchBar.value = elem
+                        requestToApi(elem)
+                    })
+                    suggestions.appendChild(name)
                 })
             })
     }

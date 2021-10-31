@@ -115,11 +115,7 @@ body {
     padding: 10px;
     margin: 5px;
     border-radius: 10px;
-}
-
-#suggestions a {
-    color: inherit;
-    text-decoration: none;
+    cursor: pointer;
 }
 
 #suggestions p:hover {
