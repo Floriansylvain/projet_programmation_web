@@ -14,14 +14,37 @@ body {
     overflow-x: hidden;
 }
 
+header {
+    height: 75px;
+}
+
+.slide-in-header {
+    animation: slide-in-header 200ms;
+    animation-fill-mode: forwards;
+}
+.slide-out-header {
+    animation: slide-out-header 200ms;
+    animation-fill-mode: forwards;
+}
+@keyframes slide-in-header {
+    from { margin-bottom: 0 }
+    to { margin-bottom: 100px }
+}
+@keyframes slide-out-header {
+    from { margin-bottom: 100px }
+    to { margin-bottom: 0 }
+}
+
 .navbar {
+    position: relative;
+    z-index: 50;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
     background: linear-gradient(245deg, #39B4E7 -15%, #0096DC 110%);
     box-shadow: rgba(0, 0, 0, 0.15) 2px 2px 5px;
-    height: 75px;
+    height: 100%;
     padding: 10px;
     width: 100%;
 }
@@ -49,11 +72,6 @@ body {
     padding: 20px 5px 20px 20px;
     width: 100%;
 }
-
-/* TODO : Ajouter une ombre quand on hover ou focus l'input (voir page google.com)*/
-/*.navbar input:hover, .navbar input:focus {*/
-/*    box-shadow: rgba(0, 0, 0, 0.15) 0 2px 5px;*/
-/*}*/
 
 .navbar button {
     align-self: center;
@@ -136,6 +154,93 @@ body {
     transform-origin: center;
     transform: rotate(90deg);
     opacity: 0;
+}
+
+#hamburger-menu {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    height: 100px;
+    background: linear-gradient(245deg, #39B4E7 -15%, #1779A3 110%);
+    box-shadow: rgba(0, 0, 0, 0.15) 2px 2px 5px;
+    top: 0;
+    transform: translateY(-110px);
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    gap: 10px;
+}
+.slide-in {
+    animation: slide-in 200ms;
+    animation-fill-mode: forwards;
+}
+.slide-out {
+    animation: slide-out 200ms;
+    animation-fill-mode: forwards;
+}
+@keyframes slide-in {
+    from { transform: translateY(-100px) }
+    to { transform: translateY(0) }
+}
+@keyframes slide-out {
+    from { transform: translateY(0) }
+    to { transform: translateY(-100px) }
+}
+
+.toggle-switch {
+    user-select: none;
+    display: flex;
+    align-items: center;
+    background-color: white;
+    width: 60px;
+    height: 30px;
+    border-radius: 25px;
+    padding: 0 3px 0 3px;
+}
+.toggle-switch .slider {
+    user-select: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 25px;
+}
+.toggle {
+    animation: toggle 200ms;
+    animation-fill-mode: forwards;
+}
+.untoggle {
+    animation: untoggle 200ms;
+    animation-fill-mode: forwards;
+}
+@keyframes toggle {
+    from {
+        transform: translateX(0);
+        opacity: 70%;
+        background: gray;
+    }
+    to {
+        transform: translateX(29px);
+        opacity: 100%;
+        background: #39B4E7;
+    }
+}
+@keyframes untoggle {
+    from {
+        transform: translateX(29px);
+        opacity: 100%;
+        background: #39B4E7;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 70%;
+        background: gray;
+    }
+}
+
+.chart-button {
+    display: flex;
+    align-items: center;
+    fill: white;
+    gap: 10px;
 }
 
 #results {
