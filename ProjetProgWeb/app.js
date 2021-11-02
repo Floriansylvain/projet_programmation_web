@@ -8,6 +8,7 @@ let errorMessage = document.querySelector('#error-message')
 let errorButton = document.querySelector('#error-button')
 let hamMenu = document.querySelector('#hamburger-menu')
 let header = document.querySelector('header')
+let title = document.querySelector('#title')
 
 function sanitize(chain) {
     return chain.replace(/[^a-zA-Z0-9 ]/g,'')
@@ -132,7 +133,11 @@ function realTimeDisplay() {
 
 document.addEventListener('click', e => {
     if (e.target.id !== 'suggestions' && e.target !== searchBar && e.target !== searchBarButton) {
+
         hideSuggestions()
+
+        title.style.display = 'block'
+
         if (e.target.id === 'hamburger' || e.target.id === 'hamburgerSvg' || e.target.id === 'crossSvg') {
             let ham = document.querySelector('#hamburgerSvg')
             let cross = document.querySelector('#crossSvg')
@@ -171,6 +176,10 @@ document.addEventListener('click', e => {
         }
 
     }
+})
+
+searchBar.addEventListener('focus', () => {
+    title.style.display = 'none'
 })
 
 navbarForm.addEventListener('submit', e => {

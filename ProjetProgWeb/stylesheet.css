@@ -113,7 +113,9 @@ header {
 }
 
 .navbar h1 {
-    display: none;
+    color: white;
+    font-size: xxx-large;
+    font-family: Cookie, 'sans-serif';
 }
 
 #suggestions {
@@ -142,8 +144,8 @@ header {
 
 #hamburger {
     fill: white;
-    width: 45px;
-    height: 45px;
+    min-width: 30px;
+    min-height: 30px;
 }
 
 #hamburgerSvg, #crossSvg {
@@ -377,12 +379,8 @@ header {
     }
 }
 @keyframes load {
-    0% {
-        stroke-dashoffset: 570;
-    }
-    50% {
-        stroke-dashoffset: 530;
-    }
+    0% { stroke-dashoffset: 570 }
+    50% { stroke-dashoffset: 530 }
     100% {
         stroke-dashoffset: 570;
         transform: rotate(360deg);
