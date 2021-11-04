@@ -14,8 +14,8 @@ if (($handle = fopen("2021-09-15-theses.csv", "r")) !== FALSE) {
     $stmt = $pdo->query("TRUNCATE `" . getenv('DBNAME') ."`.`theses`");
 
     $row = 1;
-    $new_these = these::emptyThese();
     while (($data = fgetcsv($handle, 10000, ";")) !== FALSE) {
+        $new_these = these::emptyThese();
         $num = count($data);
         if ($row > 1) {
             for ($c = 0 ; $c < $num ; $c++) {
@@ -23,10 +23,9 @@ if (($handle = fopen("2021-09-15-theses.csv", "r")) !== FALSE) {
             }
             $dump = new dump($new_these);
             try {
-                $dump->sendThese();
-            } catch (Exception) {
-                echo "<br><br>Failed on (" . $row .") :<br>";
-                var_dump($new_these);
+                $dump->sendThese($pdo);
+            } catch (Exception $e) {
+                echo "<br><br>Failed on " . $row ." ( " . $e->getMessage() . " ) :<br>";
             }
         } $row++;
     }

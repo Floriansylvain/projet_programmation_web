@@ -66,7 +66,7 @@ class dump {
         return $array;
     }
 
-    public function sendThese() {
+    public function sendThese($pdo) {
         $data = [
             'author' => $this->these->getAuthor(),
             'id_author' => empty($this->these->getIdAuthor()) ? NULL : $this->these->getIdAuthor(),
@@ -87,9 +87,7 @@ class dump {
             'date_update' => empty($this->these->getDateUpdate()) ? NULL : $this->these->getDateUpdate()
         ];
         $sql = "INSERT INTO theses (author, id_author, these_director, title, these_director_name_lastname, id_director, soutenance_establishment, id_establishment, discipline, status, date_first_registration, date_soutenance, language, id_these, online, date_publication, date_update) VALUES (:author, :id_author, :these_director, :title, :these_director_name_lastname, :id_director, :soutenance_establishment, :id_establishment, :discipline, :status, :date_first_registration, :date_soutenance, :language, :id_these, :online, :date_publication, :date_update)";
-        $pdo_obj = new conf();
-        $pdo = $pdo_obj->getPDO();
-        $stmt= $pdo->prepare($sql);
+        $stmt = $pdo->prepare($sql);
         $stmt->execute($data);
     }
 }
