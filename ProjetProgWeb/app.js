@@ -115,7 +115,7 @@ function realTimeDisplay() {
                 suggestions.innerHTML = ""
                 if (!results.data.length) {
                     hideSuggestions()
-                } else {
+                } else if (document.activeElement === searchBar) {
                     showSuggestions()
                 }
                 results.data.forEach(elem => {

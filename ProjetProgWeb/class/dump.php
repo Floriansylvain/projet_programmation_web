@@ -8,9 +8,6 @@ require_once("conf.php");
 class dump {
     private these $these;
 
-    /**
-     * @param these $these
-     */
     public function __construct(these $these) {
         $this->these = $these;
     }
@@ -51,16 +48,14 @@ class dump {
         $pdo_obj = new conf();
         $pdo = $pdo_obj->getPDO();
 
-        $stmt = $pdo->prepare("SELECT author FROM theses WHERE author LIKE :author_name LIMIT 10;");
+        $stmt = $pdo->prepare("SELECT DISTINCT author FROM theses WHERE author LIKE :author_name LIMIT 10;");
         $stmt->bindParam(':author_name', $author_name, PDO::PARAM_STR, 100);
         $stmt->execute();
 
-        $i = 0;
         while ($obj = $stmt->fetchObject()) {
             foreach ($obj as $elem) {
                 array_push($array, $elem);
             }
-            $i++;
         }
 
         return $array;
