@@ -17,13 +17,14 @@ if (strlen($author_name) < 3) {
 
 $json_object = match ($q) {
     "theses" => dump::getTheseByAuthor($author_name),
-    "authors" => dump::getAuthorsByAuthors($author_name),
+    "authors" => dump::getAuthorsByAuthor($author_name),
+    "authorsCount" => dump::getAuthorsCountByAuthor($author_name),
     default => NULL,
 };
 
 $json = json_encode(array(
     "status" => 200,
-    "message" => "Results : " . count($json_object), "data" => $json_object
+    "message" => "Success", "data" => $json_object
     ),JSON_PRETTY_PRINT);
 
 print_r($json);

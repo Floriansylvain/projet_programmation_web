@@ -40,7 +40,7 @@ class dump {
         return $theses_array;
     }
 
-    public static function getAuthorsByAuthors(mixed $author_name) : array {
+    public static function getAuthorsByAuthor(string $author_name) : array {
         $array = [];
 
         $author_name = '%' . $author_name . '%';
@@ -59,6 +59,23 @@ class dump {
         }
 
         return $array;
+    }
+
+    public static function getAuthorsCountByAuthor(string $author_name) : int {
+        $author_name = '%' . $author_name . '%';
+
+        $pdo_obj = new conf();
+        $pdo = $pdo_obj->getPDO();
+
+        $stmt = $pdo->prepare("SELECT COUNT(author) FROM theses WHERE author LIKE :author_name;");
+        $stmt->bindParam(':author_name', $author_name, PDO::PARAM_STR, 100);
+        $stmt->execute();
+
+        while ($obj = $stmt->fetchObject()) {
+            foreach ($obj as $elem) {
+                return $elem;
+            }
+        } return 0;
     }
 
     public function sendThese($pdo) {
