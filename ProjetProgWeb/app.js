@@ -47,9 +47,9 @@ function hideSuggestions() {
 }
 
 function emptyResults(withCount = false) {
+    resultsDiv.innerHTML = ""
     if (withCount)
         resultsCount.innerHTML = ""
-    resultsDiv.innerHTML = ""
 }
 
 let authorName = "";
@@ -97,6 +97,7 @@ function displayResults(results) {
         return;
     } else if (results.status === 200) {
         count = 0
+        resultsArray = []
         results.data.forEach(elem => {
             let result = document.createElement('div')
             result.classList.add('result-element')
