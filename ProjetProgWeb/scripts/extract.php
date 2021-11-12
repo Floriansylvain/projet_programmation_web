@@ -7,7 +7,7 @@ require_once('../class/dotEnv.php');
 
 (new DotEnv(__DIR__ . '/../.env'))->load();
 
-if (($handle = fopen("2021-09-15-theses.csv", "r")) !== FALSE) {
+if (($handle = fopen(getenv('FILE'), "r")) !== FALSE) {
 
     $pdo_obj = new conf();
     $pdo = $pdo_obj->getPDO();
