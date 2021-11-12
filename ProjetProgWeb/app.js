@@ -3,6 +3,8 @@ const MEDIUM = 768
 const LARGE = 992
 const EXTRA_LARGE = 1200
 
+const RESULTS_NUMBER = 10
+
 let navbarForm = document.querySelector('.navbar-form')
 let searchBar = document.querySelector('#searchbar')
 let searchBarButton = document.querySelector('#search-button')
@@ -116,7 +118,7 @@ function displayResults(results) {
 
         loader.style.display = "none"
 
-        let nbPages = Math.ceil(count / 10)
+        let nbPages = Math.ceil(count / RESULTS_NUMBER)
 
         for (let i = 0 ; i < nbPages ; i++) {
             let number = document.createElement('p')
@@ -127,7 +129,7 @@ function displayResults(results) {
                 document.querySelectorAll('.page-nav div p').forEach(elem => {
                     elem.style.textDecoration = 'none'
                 })
-                e.target.style.textDecoration = 'underline'
+                e.target.style.textDecoration = 'underline' // TODO Mettre dans browseResults
                 browseResults(i + 1)
             }
             pagesNumbers.appendChild(number)
@@ -141,12 +143,14 @@ function displayResults(results) {
 let currentPage = 1
 
 function browseResults(wantedPage) {
-    emptyResults()
-    currentPage = wantedPage
-    wantedPage *= 10
-    resultsArray.slice(wantedPage - 10, wantedPage).forEach(result => {
-        resultsDiv.appendChild(result)
-    })
+    if (wantedPage > 0) {
+        emptyResults()
+        currentPage = wantedPage
+        wantedPage *= RESULTS_NUMBER
+        resultsArray.slice(wantedPage - RESULTS_NUMBER, wantedPage).forEach(result => {
+            resultsDiv.appendChild(result)
+        })
+    }
 }
 
 let lastSearch = ""
