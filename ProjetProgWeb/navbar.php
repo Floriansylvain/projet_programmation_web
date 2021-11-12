@@ -11,7 +11,7 @@
 
         <div class="research-section">
             <form class="navbar-form">
-                <input type="text" name="author" placeholder="nom auteur" onkeyup="realTimeDisplay()" id="searchbar">
+                <input type="text" name="author" placeholder="recherche" onkeyup="realTimeDisplay()" id="searchbar">
                 <button id="form-button">
                     <img src="assets/search.svg" alt="search" id="search-button" class="animation-in">
                 </button>

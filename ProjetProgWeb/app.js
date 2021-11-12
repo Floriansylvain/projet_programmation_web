@@ -1,3 +1,8 @@
+const SMALL = 576
+const MEDIUM = 768
+const LARGE = 992
+const EXTRA_LARGE = 1200
+
 let navbarForm = document.querySelector('.navbar-form')
 let searchBar = document.querySelector('#searchbar')
 let searchBarButton = document.querySelector('#search-button')
@@ -9,6 +14,11 @@ let errorButton = document.querySelector('#error-button')
 let hamMenu = document.querySelector('#hamburger-menu')
 let header = document.querySelector('header')
 let title = document.querySelector('#title')
+let ham = document.querySelector('#hamburgerSvg')
+let cross = document.querySelector('#crossSvg')
+let pagesNumbers = document.querySelector('.page-nav div')
+let resultsDiv = document.querySelector('#results')
+let resultsCount = document.querySelector('#results-count')
 
 function sanitize(chain) {
     return chain.replace(/[^a-zA-Z0-9 ]/g,'')
@@ -34,15 +44,21 @@ function hideSuggestions() {
     }
 }
 
+function emptyResults(withCount = false) {
+    if (withCount)
+        resultsCount.innerHTML = ""
+    resultsDiv.innerHTML = ""
+}
+
 let authorName = "";
 let lastRequest = null
 
-function requestToApi(author) {
+function apiRequestThese(author) {
     hideSuggestions()
     if (lastRequest === null || (new Date().getTime() - lastRequest) > 1000) {
         lastRequest = new Date().getTime()
-        document.querySelector('#results-count').innerHTML = ""
-        document.querySelector('#results').innerHTML = ""
+        emptyResults(true)
+        pagesNumbers.innerHTML = ""
         loader.style.display = "block"
         authorName = sanitize(author)
         fetch(`api.php?q=theses&author=${author}`)
@@ -53,18 +69,23 @@ function requestToApi(author) {
     }
 }
 
-window.addEventListener('scroll', fadeIn);
-let elementsToFade = null
 function fadeIn() {
-    elementsToFade.forEach(elem => {
-        let distInView = elem.getBoundingClientRect().top - window.innerHeight + 20;
-        if (distInView < 0) {
-            elem.classList.add("fade-in");
-        }
-    })
+    let elementsToFade = document.querySelectorAll(".result-element")
+    if (elementsToFade !== null) {
+        elementsToFade.forEach(elem => {
+            let distInView = elem.getBoundingClientRect().top - window.innerHeight + 20;
+            if (distInView < 0) {
+                elem.classList.add("fade-in");
+            }
+        })
+    }
 }
 
-// TODO : Faire un système de page plutôt que de charger 10000 résultats en une fois s'il y en a 10000..
+window.addEventListener('scroll', fadeIn);
+
+let resultsArray = []
+let count = 0
+
 function displayResults(results) {
 
     if (results.status === 400) {
@@ -73,30 +94,59 @@ function displayResults(results) {
         errorMessage.innerHTML = results.message
         return;
     } else if (results.status === 200) {
-        let count = 0
+        count = 0
         results.data.forEach(elem => {
             let result = document.createElement('div')
             result.classList.add('result-element')
             let i = 0
             elem.forEach(e => {
-                let child = document.createElement(i === 0 ? 'h1' : 'p')
+                let child = document.createElement(i === 0 ? 'h2' : 'p')
                 child.innerText = e
                 result.appendChild(child)
                 i += 1
             })
             count += 1
-            document.getElementById('results').appendChild(result)
+
+            resultsArray.push(result)
         })
 
         let nb = document.createElement("p")
         nb.innerHTML = `Nombre de résultats pour "${authorName}": ${count}.`
-        document.getElementById('results-count').appendChild(nb)
+        resultsCount.appendChild(nb)
 
         loader.style.display = "none"
 
-        elementsToFade = document.querySelectorAll(".result-element")
+        let nbPages = Math.ceil(count / 10)
+
+        for (let i = 0 ; i < nbPages ; i++) {
+            let number = document.createElement('p')
+            number.innerHTML = i + 1
+            if (i === 0)
+                number.style.textDecoration = 'underline'
+            number.onclick = (e) => {
+                document.querySelectorAll('.page-nav div p').forEach(elem => {
+                    elem.style.textDecoration = 'none'
+                })
+                e.target.style.textDecoration = 'underline'
+                browseResults(i + 1)
+            }
+            pagesNumbers.appendChild(number)
+        }
+
+        browseResults(1)
         fadeIn()
     }
+}
+
+let currentPage = 1
+
+function browseResults(wantedPage) {
+    emptyResults()
+    currentPage = wantedPage
+    wantedPage *= 10
+    resultsArray.slice(wantedPage - 10, wantedPage).forEach(result => {
+        resultsDiv.appendChild(result)
+    })
 }
 
 let lastSearch = ""
@@ -123,7 +173,7 @@ function realTimeDisplay() {
                     name.innerHTML = elem
                     name.addEventListener('click', () => {
                         searchBar.value = elem
-                        requestToApi(elem)
+                        apiRequestThese(elem)
                     })
                     suggestions.appendChild(name)
                 })
@@ -131,30 +181,41 @@ function realTimeDisplay() {
     }
 }
 
+function switchHam(q) {
+    if (q) {
+        ham.classList.add('spin-fade')
+        cross.classList.remove('spin-fade')
+        header.classList.remove('slide-out-header')
+        header.classList.add('slide-in-header')
+        hamMenu.classList.remove('slide-out')
+        hamMenu.classList.add('slide-in')
+    } else {
+        cross.classList.add('spin-fade')
+        ham.classList.remove('spin-fade')
+        header.classList.replace('slide-in-header', 'slide-out-header')
+        hamMenu.classList.replace('slide-in', 'slide-out')
+    }
+}
+
+function switchNavTitle(q) {
+    if (q) {
+        title.style.display = 'block'
+    } else if (window.innerWidth < SMALL) {
+        title.style.display = 'none'
+    }
+}
+
 document.addEventListener('click', e => {
     if (e.target.id !== 'suggestions' && e.target !== searchBar && e.target !== searchBarButton) {
 
         hideSuggestions()
-
-        title.style.display = 'block'
+        switchNavTitle(true)
 
         if (e.target.id === 'hamburger' || e.target.id === 'hamburgerSvg' || e.target.id === 'crossSvg') {
-            let ham = document.querySelector('#hamburgerSvg')
-            let cross = document.querySelector('#crossSvg')
-            if (ham.classList.contains('spin-fade')) {
-                cross.classList.add('spin-fade')
-                ham.classList.remove('spin-fade')
-                header.classList.replace('slide-in-header', 'slide-out-header')
-                hamMenu.classList.replace('slide-in', 'slide-out')
-            }
-            else {
-                ham.classList.add('spin-fade')
-                cross.classList.remove('spin-fade')
-                header.classList.remove('slide-out-header')
-                header.classList.add('slide-in-header')
-                hamMenu.classList.remove('slide-out')
-                hamMenu.classList.add('slide-in')
-            }
+            if (ham.classList.contains('spin-fade'))
+                switchHam(false)
+            else
+                switchHam(true)
         }
 
         if (e.target === errorButton) {
@@ -179,12 +240,12 @@ document.addEventListener('click', e => {
 })
 
 searchBar.addEventListener('focus', () => {
-    title.style.display = 'none'
+    switchNavTitle(false)
 })
 
 navbarForm.addEventListener('submit', e => {
     e.preventDefault()
     let data = new FormData(navbarForm)
     searchBar.blur()
-    requestToApi(data.get('author'))
+    apiRequestThese(data.get('author'))
 })

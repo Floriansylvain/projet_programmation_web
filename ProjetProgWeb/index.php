@@ -28,6 +28,14 @@
         </div>
 
         <div id="results-count"></div>
+
+        <div class="page-nav">
+            <p onclick="browseResults(currentPage-1)">&#60;-</p>
+            <div>
+            </div>
+            <p onclick="browseResults(currentPage+1)">-&#62;</p>
+        </div>
+
         <div id="results"></div>
 
         <div id="error">
