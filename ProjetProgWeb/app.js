@@ -85,13 +85,25 @@ function fadeIn() {
 
 window.addEventListener('scroll', fadeIn);
 
+function updateUnderline(number) {
+    pagesNumbers.childNodes.forEach(elem => {
+        if (elem.innerHTML == number) {
+            elem.style.textDecoration = "underline"
+        } else {
+            elem.style.textDecoration = 'none'
+        }
+    })
+}
+
 let resultsArray = []
 let count = 0
+let nbPages = 0
 
 function displayResults(results) {
 
     if (results.status === 400) {
         loader.style.display = "none"
+        error.classList.remove("fade-out");
         error.classList.add("fade-in");
         errorMessage.innerHTML = results.message
         return;
@@ -119,7 +131,7 @@ function displayResults(results) {
 
         loader.style.display = "none"
 
-        let nbPages = Math.ceil(count / RESULTS_NUMBER)
+        nbPages = Math.ceil(count / RESULTS_NUMBER)
 
         for (let i = 0 ; i < nbPages ; i++) {
             let number = document.createElement('p')
@@ -127,10 +139,7 @@ function displayResults(results) {
             if (i === 0)
                 number.style.textDecoration = 'underline'
             number.onclick = (e) => {
-                document.querySelectorAll('.page-nav div p').forEach(elem => {
-                    elem.style.textDecoration = 'none'
-                })
-                e.target.style.textDecoration = 'underline' // TODO Mettre dans browseResults
+                updateUnderline(e.target.innerHTML)
                 browseResults(i + 1)
             }
             pagesNumbers.appendChild(number)
@@ -144,8 +153,9 @@ function displayResults(results) {
 let currentPage = 1
 
 function browseResults(wantedPage) {
-    if (wantedPage > 0) {
+    if (wantedPage > 0 && wantedPage < nbPages+1) {
         emptyResults()
+        updateUnderline(wantedPage)
         currentPage = wantedPage
         wantedPage *= RESULTS_NUMBER
         resultsArray.slice(wantedPage - RESULTS_NUMBER, wantedPage).forEach(result => {

@@ -11,7 +11,10 @@ $author_name = filter_var($_GET['author'], FILTER_SANITIZE_ADD_SLASHES);
 $q = $_GET['q'];
 
 if (strlen($author_name) < 3) {
-    print_r(json_encode(array("status" => 400, "message" => "Le nom de l'auteur doit comporter un minimum de 3 caractères.")));
+    print_r(json_encode(array(
+        "status" => 400,
+        "message" => "Le nom de l'auteur doit comporter un minimum de 3 caractères."
+    )));
     exit();
 }
 
@@ -25,6 +28,6 @@ $json_object = match ($q) {
 $json = json_encode(array(
     "status" => 200,
     "message" => "Success", "data" => $json_object
-    ),JSON_PRETTY_PRINT);
+    ));
 
-print_r($json);
+echo $json;

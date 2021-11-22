@@ -328,15 +328,7 @@ header {
     fill: #302B2B;
     width: 20px;
     height: 20px;
-    background: #DE6161;
-    border-radius: 1px;
-    padding: 2px;
     margin-left: auto;
-    border: 1px solid #824D4D;
-}
-
-#error-button:hover {
-    background: #CA5D5D;
 }
 
 .loader {
@@ -417,7 +409,7 @@ header {
     padding: 0 15px 0 15px;
     border-radius: 20px;
     color: #1a5f7d;
-    background: linear-gradient(245deg, rgba(57, 179, 231, 0.50) -15%, rgba(0, 149, 219, 0.50) 110%);
+    background: linear-gradient(245deg, rgba(57, 179, 231, 0.15) -15%, rgba(0, 149, 219, 0.15) 110%);
 }
 
 .page-nav div {
