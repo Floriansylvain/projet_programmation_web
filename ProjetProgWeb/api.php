@@ -13,7 +13,7 @@ $q = $_GET['q'];
 if (strlen($author_name) < 3) {
     print_r(json_encode(array(
         "status" => 400,
-        "message" => "Le nom de l'auteur doit comporter un minimum de 3 caractères."
+        "message" => "La recherche doit comporter un minimum de 3 caractères."
     )));
     exit();
 }

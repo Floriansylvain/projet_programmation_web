@@ -18,12 +18,13 @@ let header = document.querySelector('header')
 let title = document.querySelector('#title')
 let ham = document.querySelector('#hamburgerSvg')
 let cross = document.querySelector('#crossSvg')
+let pagesNumbersContainer = document.querySelector('.page-nav')
 let pagesNumbers = document.querySelector('.page-nav div')
 let resultsDiv = document.querySelector('#results')
 let resultsCount = document.querySelector('#results-count')
 
 function sanitize(chain) {
-    return chain.replace(/[^a-zA-Z0-9 ]/g,'')
+    return chain.replace(/[^a-zA-Z0-9\- ]/g,'')
 }
 
 function showSuggestions() {
@@ -89,6 +90,9 @@ function updateUnderline(number) {
     pagesNumbers.childNodes.forEach(elem => {
         if (elem.innerHTML == number) {
             elem.style.textDecoration = "underline"
+            pagesNumbers.scrollLeft += elem.getBoundingClientRect().left -
+                pagesNumbers.getBoundingClientRect().left -
+                (pagesNumbers.offsetWidth / 2) + (elem.offsetWidth / 2)
         } else {
             elem.style.textDecoration = 'none'
         }
@@ -106,27 +110,44 @@ function displayResults(results) {
         error.classList.remove("fade-out");
         error.classList.add("fade-in");
         errorMessage.innerHTML = results.message
+        pagesNumbersContainer.style.display = 'none'
         return;
     } else if (results.status === 200) {
         count = 0
         resultsArray = []
+        pagesNumbersContainer.style.display = 'flex'
         results.data.forEach(elem => {
             let result = document.createElement('div')
             result.classList.add('result-element')
             let i = 0
-            elem.forEach(e => {
-                let child = document.createElement(i === 0 ? 'h2' : 'p')
-                child.innerText = e
-                result.appendChild(child)
-                i += 1
-            })
+
+            let qAuthor = elem[0]
+            let author = document.createElement('h3')
+            let pre_replacement = new RegExp( authorName, 'gi').exec(qAuthor)
+            author.innerHTML = qAuthor.replace(pre_replacement, `<mark>${pre_replacement}</mark>`)
+
+            let qTitle = elem[2]
+            let title = document.createElement('p')
+            title.innerText = qTitle
+
+            result.appendChild(author)
+            result.appendChild(title)
+
+            // elem.forEach(e => {
+            //     let child = document.createElement(i === 0 ? 'h2' : 'p')
+            //     let pre_replacement = new RegExp( authorName, 'gi').exec(e)
+            //     child.innerHTML = e.replace(pre_replacement, `<mark>${pre_replacement}</mark>`)
+            //     result.appendChild(child)
+            //     i += 1
+            // })
             count += 1
 
             resultsArray.push(result)
         })
 
         let nb = document.createElement("p")
-        nb.innerHTML = `Nombre de résultats pour "${authorName}": ${count}.`
+        nb.innerHTML = `Nombre de résultats pour "${authorName}": 
+            ${new Intl.NumberFormat('fr-FR', { maximumSignificantDigits: 3 }).format(count)}.`
         resultsCount.appendChild(nb)
 
         loader.style.display = "none"
@@ -153,7 +174,7 @@ function displayResults(results) {
 let currentPage = 1
 
 function browseResults(wantedPage) {
-    if (wantedPage > 0 && wantedPage < nbPages+1) {
+    if ((wantedPage > 0 && wantedPage < nbPages + 1)) {
         emptyResults()
         updateUnderline(wantedPage)
         currentPage = wantedPage
@@ -161,6 +182,7 @@ function browseResults(wantedPage) {
         resultsArray.slice(wantedPage - RESULTS_NUMBER, wantedPage).forEach(result => {
             resultsDiv.appendChild(result)
         })
+        fadeIn()
     }
 }
 

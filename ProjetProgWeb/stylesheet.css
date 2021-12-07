@@ -20,6 +20,7 @@ body {
     margin: 0;
     padding: 0;
     width: 100%;
+    background-color: #FDFDFD;
 }
 
 header {
@@ -266,7 +267,7 @@ header {
 }
 
 #results {
-    margin: 10px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -280,11 +281,10 @@ header {
 
 /*TODO : Faire des beaux panneaux expansibles*/
 .result-element {
-    box-shadow: rgba(0, 0, 0, 0.10) 2px 2px 8px;
-    background-color: rgba(250, 250, 250, 0.5);
+    box-shadow: rgba(0, 0, 0, 0.10) 2px 2px 15px;
     border-radius: 3px;
-    margin: 0 5px 5px 5px;
-    padding: 5px 10px 10px 10px;
+    margin: 0 5px 0 5px;
+    padding: 0 10px 0 10px;
     transform: translateX(100px);
 }
 
@@ -401,11 +401,15 @@ header {
 }
 
 .page-nav {
-    display: flex;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    display: none;
     gap: 10px;
     font-size: 18px;
     line-height: 0;
-    margin: 15px auto 15px auto;
+    margin: 0 auto 0 auto;
     padding: 0 15px 0 15px;
     border-radius: 20px;
     color: #1a5f7d;
@@ -415,8 +419,8 @@ header {
 .page-nav div {
     display: flex;
     gap: 5px;
-    max-width: 155px;
-    overflow-x: scroll;
+    max-width: 170px;
+    overflow-x: hidden;
 }
 
 /* Small  */

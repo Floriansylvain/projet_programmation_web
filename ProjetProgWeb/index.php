@@ -31,12 +31,13 @@
 
         <div class="page-nav">
             <p onclick="browseResults(currentPage-1)">&#60;-</p>
-            <div>
-            </div>
+            <div></div>
             <p onclick="browseResults(currentPage+1)">-&#62;</p>
         </div>
 
-        <div id="results"></div>
+        <div id="results">
+            <h1 style="color:#CFCFCF;text-align: center">Bienvenue sur theses.fr</h1>
+        </div>
 
         <div id="error">
             <div id="error-message"></div>
