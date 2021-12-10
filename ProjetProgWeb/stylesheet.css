@@ -279,13 +279,56 @@ header {
     margin: 0 15px 0 15px;
 }
 
-/*TODO : Faire des beaux panneaux expansibles*/
 .result-element {
-    box-shadow: rgba(0, 0, 0, 0.10) 2px 2px 15px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: rgba(0, 0, 0, 0.05) 2px 2px 15px;
     border-radius: 3px;
     margin: 0 5px 0 5px;
     padding: 0 10px 0 10px;
     transform: translateX(100px);
+}
+
+.result-element:hover {
+    box-shadow: rgba(0, 0, 0, 0.15) 2px 2px 15px;
+}
+
+.result-element-header {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.result-element h3 {
+    overflow-wrap: break-word;
+}
+
+.result-element-header {
+    display: flex;
+    align-items: center;
+}
+
+.result-element-header button {
+    background: none;
+    border: none;
+    margin-left: auto;
+    cursor: pointer;
+}
+
+.result-element-header button svg {
+    background: linear-gradient(245deg, rgba(57, 179, 231, 0.15) -15%, rgba(0, 149, 219, 0.15) 110%);
+    border-radius: 3px;
+    fill: #39B4E7;
+    padding: 4px;
+    transform: scale(1.5);
+}
+
+.result-element-header button:disabled {
+    filter: grayscale(100);
+}
+
+.element-content {
+    display: none;
 }
 
 .fade-in {
@@ -421,6 +464,11 @@ header {
     gap: 5px;
     max-width: 170px;
     overflow-x: hidden;
+    cursor: pointer;
+}
+
+.page-nav p {
+    cursor: pointer;
 }
 
 /* Small  */
@@ -430,7 +478,10 @@ header {
 
 /* Medium */
 @media (min-width: 768px) {
-
+    .result-element {
+        width: 768px;
+        margin: auto;
+    }
 }
 
 /* Large */

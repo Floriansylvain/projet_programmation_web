@@ -24,7 +24,7 @@ class dump {
 
         $author = '%' . $author . '%';
 
-        $stmt = $pdo->prepare("SELECT * FROM theses WHERE author LIKE :author;");
+        $stmt = $pdo->prepare("SELECT * FROM theses WHERE author LIKE :author ORDER BY author;");
         $stmt->bindParam(':author', $author, PDO::PARAM_STR, 100);
         $stmt->execute();
 

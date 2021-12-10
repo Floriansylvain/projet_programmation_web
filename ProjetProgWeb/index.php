@@ -39,6 +39,8 @@
             <h1 style="color:#CFCFCF;text-align: center">Bienvenue sur theses.fr</h1>
         </div>
 
+        <!-- TODO Bouton pour remonter en haut de la page -->
+
         <div id="error">
             <div id="error-message"></div>
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" id="error-button">

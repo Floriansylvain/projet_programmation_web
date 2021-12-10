@@ -10,8 +10,8 @@
         <h1 id="title">theses.fr</h1>
 
         <div class="research-section">
-            <form class="navbar-form">
-                <input type="text" name="author" placeholder="recherche" onkeyup="realTimeDisplay()" id="searchbar">
+            <form class="navbar-form" method="GET" action="index.php">
+                <input type="text" name="search" placeholder="recherche" onkeyup="realTimeDisplay()" id="searchbar">
                 <button id="form-button">
                     <img src="assets/search.svg" alt="search" id="search-button" class="animation-in">
                 </button>
