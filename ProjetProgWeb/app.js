@@ -16,7 +16,6 @@ let error = document.querySelector('#error')
 let errorMessage = document.querySelector('#error-message')
 let errorButton = document.querySelector('#error-button')
 let hamMenu = document.querySelector('#hamburger-menu')
-let header = document.querySelector('header')
 let title = document.querySelector('#title')
 let ham = document.querySelector('#hamburgerSvg')
 let cross = document.querySelector('#crossSvg')
@@ -266,14 +265,11 @@ function switchHam(q) {
     if (q) {
         ham.classList.add('spin-fade')
         cross.classList.remove('spin-fade')
-        header.classList.remove('slide-out-header')
-        header.classList.add('slide-in-header')
         hamMenu.classList.remove('slide-out')
         hamMenu.classList.add('slide-in')
     } else {
         cross.classList.add('spin-fade')
         ham.classList.remove('spin-fade')
-        header.classList.replace('slide-in-header', 'slide-out-header')
         hamMenu.classList.replace('slide-in', 'slide-out')
     }
 }
