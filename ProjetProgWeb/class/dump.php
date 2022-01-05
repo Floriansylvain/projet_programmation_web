@@ -16,16 +16,31 @@ class dump {
         return date("Y-m-d", strtotime($old_date));
     }
 
-    public static function getTheseByAuthor($author) : array {
+    public static function getTheses(string $search, string $option) : array {
         $theses_array = [];
 
         $pdo_obj = new conf();
         $pdo = $pdo_obj->getPDO();
 
-        $author = '%' . $author . '%';
+        $search = '%' . $search . '%';
 
-        $stmt = $pdo->prepare("SELECT * FROM theses WHERE author LIKE :author ORDER BY author;");
-        $stmt->bindParam(':author', $author, PDO::PARAM_STR, 100);
+        $stmt = match ($option) {
+            'auto' => $pdo->prepare("
+                SELECT *
+                FROM theses
+                WHERE author LIKE :search
+                  OR title LIKE :search
+                  OR these_director LIKE :search
+                  OR soutenance_establishment LIKE :search;
+            "),
+            'author' => $pdo->prepare("SELECT * FROM theses WHERE author LIKE :search ORDER BY author;"),
+            'title' => $pdo->prepare("SELECT * FROM theses WHERE title LIKE :search;"),
+            'director' => $pdo->prepare("SELECT * FROM theses WHERE these_director LIKE :search;"),
+            'establishment' => $pdo->prepare("SELECT * FROM theses WHERE soutenance_establishment LIKE :search;"),
+            default => "",
+        };
+
+        $stmt->bindParam(':search', $search, PDO::PARAM_STR, 100);
         $stmt->execute();
 
         $i = 0;
@@ -40,16 +55,16 @@ class dump {
         return $theses_array;
     }
 
-    public static function getAuthorsByAuthor(string $author_name) : array {
+    public static function getSuggestions(string $search, string $option) : array {
         $array = [];
 
-        $author_name = '%' . $author_name . '%';
+        $search = '%' . $search . '%';
 
         $pdo_obj = new conf();
         $pdo = $pdo_obj->getPDO();
 
-        $stmt = $pdo->prepare("SELECT DISTINCT author FROM theses WHERE author LIKE :author_name LIMIT 10;");
-        $stmt->bindParam(':author_name', $author_name, PDO::PARAM_STR, 100);
+        $stmt = $pdo->prepare("SELECT DISTINCT author FROM theses WHERE author LIKE :search LIMIT 10;");
+        $stmt->bindParam(':search', $search, PDO::PARAM_STR, 100);
         $stmt->execute();
 
         while ($obj = $stmt->fetchObject()) {
@@ -59,23 +74,6 @@ class dump {
         }
 
         return $array;
-    }
-
-    public static function getAuthorsCountByAuthor(string $author_name) : int {
-        $author_name = '%' . $author_name . '%';
-
-        $pdo_obj = new conf();
-        $pdo = $pdo_obj->getPDO();
-
-        $stmt = $pdo->prepare("SELECT COUNT(author) FROM theses WHERE author LIKE :author_name;");
-        $stmt->bindParam(':author_name', $author_name, PDO::PARAM_STR, 100);
-        $stmt->execute();
-
-        while ($obj = $stmt->fetchObject()) {
-            foreach ($obj as $elem) {
-                return $elem;
-            }
-        } return 0;
     }
 
     public function sendThese($pdo) {

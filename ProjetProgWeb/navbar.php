@@ -12,6 +12,7 @@
         <div class="research-section">
             <form class="navbar-form" method="GET" action="index.php">
                 <input type="text" name="search" placeholder="recherche" onkeyup="realTimeDisplay()" id="searchbar">
+                <input style="display:none" type="text" name="option">
                 <button id="form-button">
                     <img src="assets/search.svg" alt="search" id="search-button" class="animation-in">
                 </button>
@@ -26,10 +27,10 @@
         <div>
             <h3>Filtres : </h3>
             <div class="filters">
-                <p>Auto</p>
-                <p>Auteur</p>
-                <p>Titre</p>
-                <p>Date</p>
+                <p id="f-auto">Auto</p>
+                <p id="f-author">Auteur</p>
+                <p id="f-director">Directeur</p>
+                <p id="f-establishment">Etablissement</p>
             </div>
         </div>
 

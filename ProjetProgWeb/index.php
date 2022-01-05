@@ -48,6 +48,8 @@
             </svg>
         </div>
 
+        <!-- TODO Footer avec lien vers depot github -->
+
         <script src="app.js"></script>
 
     </body>

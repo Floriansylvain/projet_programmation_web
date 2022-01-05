@@ -23,6 +23,7 @@ let pagesNumbersContainer = document.querySelector('.page-nav')
 let pagesNumbers = document.querySelector('.page-nav div')
 let resultsDiv = document.querySelector('#results')
 let resultsCount = document.querySelector('#results-count')
+let filters = document.querySelectorAll('.filters p')
 
 function sanitize(chain) {
     return chain.replace(/[^a-zA-Z0-9\- ]/g,'')
@@ -54,18 +55,19 @@ function emptyResults(withCount = false) {
         resultsCount.innerHTML = ""
 }
 
-let authorName = "";
+let searchString = "";
 let lastRequest = null
+let queryOption = null
 
-function apiRequestThese(author) {
+function apiRequestThese(search) {
     hideSuggestions()
     if (lastRequest === null || (new Date().getTime() - lastRequest) > 1000) {
         lastRequest = new Date().getTime()
         emptyResults(true)
         pagesNumbers.innerHTML = ""
         loader.style.display = "block"
-        authorName = sanitize(author)
-        fetch(`api.php?q=theses&author=${author}`)
+        searchString = sanitize(search)
+        fetch(`api.php?q=theses&search=${search}&option=${queryOption}`)
             .then(response => response.json())
             .then(data => displayResults(data))
     } else {
@@ -139,7 +141,7 @@ function displayResults(results) {
 
             let qAuthor = elem[0]
             let author = document.createElement('h3')
-            let pre_replacement = new RegExp( authorName, 'gi').exec(qAuthor)
+            let pre_replacement = new RegExp(searchString, 'gi').exec(qAuthor)
             author.innerHTML = qAuthor.replace(pre_replacement, `<mark>${pre_replacement}</mark>`)
 
             let qTitle = elem[2]
@@ -168,14 +170,14 @@ function displayResults(results) {
             elem.forEach(e => {
                 if (i > 3 && i !== 14) {
                     let child = document.createElement('p')
-                    let pre_replacement = new RegExp(authorName, 'gi').exec(e)
+                    let pre_replacement = new RegExp(searchString, 'gi').exec(e)
                     child.innerHTML = e.replace(pre_replacement, `<mark>${pre_replacement}</mark>`)
                     content.appendChild(child)
                 } i += 1
             })
             count += 1
 
-            header.addEventListener('click', (e) => {
+            header.addEventListener('click', () => {
                 focusResults(result)
             })
 
@@ -185,7 +187,7 @@ function displayResults(results) {
         })
 
         let nb = document.createElement("p")
-        nb.innerHTML = `Nombre de résultats pour "${authorName}": 
+        nb.innerHTML = `Nombre de résultats pour "${searchString}": 
             ${new Intl.NumberFormat('fr-FR', { maximumSignificantDigits: 3 }).format(count)}.`
         resultsCount.appendChild(nb)
 
@@ -216,6 +218,7 @@ function displayResults(results) {
 
 let currentPage = 1
 
+// TODO URGENCE ABSOLUE Charger les résultats de 10 à 10 pour de vrai depuis la requête SQL elle-même (bon courage)
 function browseResults(wantedPage) {
     if ((wantedPage > 0 && wantedPage < nbPages + 1)) {
         emptyResults()
@@ -239,7 +242,7 @@ function realTimeDisplay() {
     if (search.length > 3 && (search !== lastSearch && (new Date().getTime() - lastSuggestion) > 500)) {
         lastSearch = search
         lastSuggestion = new Date().getTime()
-        fetch(`api.php?q=authors&author=${search}`)
+        fetch(`api.php?q=suggestion&search=${search}&option=${queryOption}`)
             .then(response => response.json())
             .then(results => {
                 suggestions.innerHTML = ""
@@ -282,6 +285,20 @@ function switchNavTitle(q) {
     }
 }
 
+function updateFilter(f) {
+    if (f.includes('f-')) {
+        queryOption = f.substring(2)
+    } else {
+        queryOption = f
+    }
+
+    filters.forEach(elem => {
+        elem.style.boxShadow = 'none'
+    })
+
+    document.querySelector('#f-' + queryOption).style.boxShadow = 'inset rgba(0, 0, 0, 0.40) 0 0 5px'
+}
+
 document.addEventListener('click', e => {
     if (e.target.id !== 'suggestions' && e.target !== searchBar && e.target !== searchBarButton) {
 
@@ -295,24 +312,32 @@ document.addEventListener('click', e => {
                 switchHam(true)
         }
 
-        if (e.target === errorButton) {
+        if (e.target === errorButton || e.target === errorButton.firstElementChild) {
             error.classList.replace('fade-in', 'fade-out')
         }
 
         let toggleSwitch = null
+        let toggleSwitchParent = null
         if (e.target.classList.contains('slider')) {
             toggleSwitch = e.target
+            toggleSwitchParent = e.target.parentNode
         } else if (e.target.classList.contains('toggle-switch')) {
             toggleSwitch = e.target.firstElementChild
+            toggleSwitchParent = e.target
         }
         if (toggleSwitch !== null) {
             if (toggleSwitch.classList.contains('untoggle')) {
+                toggleSwitchParent.style.backgroundColor = '#FFF'
                 toggleSwitch.classList.replace('untoggle', 'toggle')
             } else {
+                toggleSwitchParent.style.backgroundColor = '#ECECEC'
                 toggleSwitch.classList.replace('toggle', 'untoggle')
             }
         }
 
+        if (e.target.id.toString().includes('f-')) {
+            updateFilter(e.target.id)
+        }
     }
 })
 
@@ -320,14 +345,14 @@ searchBar.addEventListener('focus', () => {
     switchNavTitle(false)
 })
 
-// navbarForm.addEventListener('submit', e => {
-//     e.preventDefault()
-//     let data = new FormData(navbarForm)
-//     searchBar.blur()
-//     apiRequestThese(data.get('author'))
-// })
+navbarForm.addEventListener('submit', () => {
+    navbarForm.querySelector('input[name="option"]').value = queryOption
+})
 
 let urlSearch = urlParams.get('search')
+let urlOption = urlParams.get('option')
+
+updateFilter(urlOption ? urlOption : 'f-auto')
 
 if (urlSearch) {
     searchBar.value = urlSearch

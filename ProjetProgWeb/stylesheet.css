@@ -178,12 +178,14 @@ header {
 
 .filters {
     display: flex;
+    flex-wrap: wrap;
     gap: 5px;
     color: white;
     font-family: sans-serif;
 }
 
 .filters p {
+    margin: 0;
     padding: 3px 10px 3px 10px;
     border-radius: 10px;
     background-color: #39B4E7;
@@ -218,11 +220,13 @@ header {
     user-select: none;
     display: flex;
     align-items: center;
-    background-color: white;
+    background-color: #ECECEC;
+    box-shadow: inset rgba(0, 0, 0, 0.15) 0 0 10px;
     width: 60px;
     height: 30px;
     border-radius: 25px;
     padding: 0 3px 0 3px;
+    transition: 200ms background-color;
 }
 .toggle-switch .slider {
     -ms-user-select: none;
@@ -292,7 +296,7 @@ header {
     box-shadow: rgba(0, 0, 0, 0.05) 2px 2px 15px;
     border-radius: 25px;
     margin: 0 5px 0 5px;
-    padding: 5px 15px 5px 15px;
+    padding: 5px 20px 5px 20px;
     transform: translateX(100px);
 }
 

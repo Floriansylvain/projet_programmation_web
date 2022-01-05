@@ -1,6 +1,5 @@
 <?php
 
-// Since I don't know atm if I am allowed to use external libs like dotenv, I used this piece of code to load .env file.
 // Link : https://dev.to/fadymr/php-create-your-own-php-dotenv-3k2i
 // Author : F.R Michel
 class dotEnv
