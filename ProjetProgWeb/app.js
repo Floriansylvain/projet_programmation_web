@@ -236,7 +236,6 @@ function browseResults(wantedPage) {
     if (wantedPage > 0 && wantedPage < nbPages + 1) {
         let offset = (wantedPage * RESULTS_NUMBER) - RESULTS_NUMBER
         submitForm(offset)
-        // window.location.href = `index.php?search=${search}&option=${queryOption}&offset=${offset}`
     }
 }
 
