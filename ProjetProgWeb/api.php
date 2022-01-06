@@ -2,7 +2,7 @@
 
 require_once("class/dump.php");
 
-if (!isset($_GET['q']) || !isset($_GET['search']) || !isset($_GET['option'])) {
+if (!isset($_GET['q']) || !isset($_GET['search']) || !isset($_GET['option']) || !isset($_GET['offset'])) {
     print_r(json_encode(array("status" => 400, "message" => "Missing query type or attributes.")));
     exit();
 }
@@ -10,6 +10,7 @@ if (!isset($_GET['q']) || !isset($_GET['search']) || !isset($_GET['option'])) {
 $q = $_GET['q'];
 $search = filter_var($_GET['search'], FILTER_SANITIZE_ADD_SLASHES);
 $option = $_GET['option'];
+$offset = $_GET['offset'];
 
 if (strlen($search) < 3) {
     print_r(json_encode(array(
@@ -20,8 +21,9 @@ if (strlen($search) < 3) {
 }
 
 $json_object = match ($q) {
-    "theses" => dump::getTheses($search, $option),
+    "theses" => dump::getTheses($search, $option, $offset),
     "suggestion" => dump::getSuggestions($search, $option),
+    "count" => dump::getThesesCount($search, $option),
     default => NULL,
 };
 

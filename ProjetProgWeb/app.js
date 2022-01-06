@@ -59,7 +59,7 @@ let searchString = "";
 let lastRequest = null
 let queryOption = null
 
-function apiRequestThese(search) {
+function apiRequestThese(search, offset) {
     hideSuggestions()
     if (lastRequest === null || (new Date().getTime() - lastRequest) > 1000) {
         lastRequest = new Date().getTime()
@@ -67,9 +67,13 @@ function apiRequestThese(search) {
         pagesNumbers.innerHTML = ""
         loader.style.display = "block"
         searchString = sanitize(search)
-        fetch(`api.php?q=theses&search=${search}&option=${queryOption}`)
+        fetch(`api.php?q=theses&search=${searchString}&option=${queryOption}&offset=${offset}`)
             .then(response => response.json())
-            .then(data => displayResults(data))
+            .then(data => {
+                fetch(`api.php?q=count&search=${searchString}&option=${queryOption}&offset=0`)
+                    .then(response => response.json())
+                    .then(aCount => displayResults(data, aCount.data[0]))
+            })
     } else {
         alert('Veuillez attendre une seconde entre chaque recherche.')
     }
@@ -89,15 +93,17 @@ function fadeIn() {
 
 window.addEventListener('scroll', fadeIn);
 
-function updateUnderline(number) {
+function updatePageNumber(number) {
     pagesNumbers.childNodes.forEach(elem => {
         if (elem.innerHTML == number) {
+            elem.style.fontWeight = "bold"
             elem.style.textDecoration = "underline"
             pagesNumbers.scrollLeft += elem.getBoundingClientRect().left -
                 pagesNumbers.getBoundingClientRect().left -
                 (pagesNumbers.offsetWidth / 2) + (elem.offsetWidth / 2)
         } else {
-            elem.style.textDecoration = 'none'
+            elem.style.textDecoration = "normal"
+            elem.style.textDecoration = "none"
         }
     })
 }
@@ -118,9 +124,9 @@ function focusResults(result) {
 let resultsArray = []
 let count = 0
 let nbPages = 0
+let currentPage = null
 
-function displayResults(results) {
-
+function displayResults(results, aCount) {
     if (results.status === 400) {
         loader.style.display = "none"
         error.classList.remove("fade-out");
@@ -129,7 +135,7 @@ function displayResults(results) {
         pagesNumbersContainer.style.display = 'none'
         return;
     } else if (results.status === 200) {
-        count = 0
+        count = aCount
         resultsArray = []
         pagesNumbersContainer.style.display = 'flex'
         results.data.forEach(elem => {
@@ -176,7 +182,6 @@ function displayResults(results) {
                     content.appendChild(child)
                 } i += 1
             })
-            count += 1
 
             header.addEventListener('click', () => {
                 focusResults(result)
@@ -201,8 +206,7 @@ function displayResults(results) {
             number.innerHTML = i + 1
             if (i === 0)
                 number.style.textDecoration = 'underline'
-            number.onclick = (e) => {
-                updateUnderline(e.target.innerHTML)
+            number.onclick = () => {
                 browseResults(i + 1)
             }
             pagesNumbers.appendChild(number)
@@ -212,24 +216,27 @@ function displayResults(results) {
             pagesNumbersContainer.style.display = 'none'
         }
 
-        browseResults(1)
+        resultsArray.forEach(result => {
+            resultsDiv.appendChild(result)
+        })
+
+        currentPage = (parseInt(urlOffset) + RESULTS_NUMBER) / RESULTS_NUMBER
+        updatePageNumber(currentPage)
         fadeIn()
     }
 }
 
-let currentPage = 1
+function submitForm(offset) {
+    navbarForm.querySelector('input[name="option"]').value = queryOption
+    navbarForm.querySelector('input[name="offset"]').value = offset
+    navbarForm.submit()
+}
 
-// TODO URGENCE ABSOLUE Charger les résultats de 10 à 10 pour de vrai depuis la requête SQL elle-même (bon courage)
 function browseResults(wantedPage) {
-    if ((wantedPage > 0 && wantedPage < nbPages + 1)) {
-        emptyResults()
-        updateUnderline(wantedPage)
-        currentPage = wantedPage
-        wantedPage *= RESULTS_NUMBER
-        resultsArray.slice(wantedPage - RESULTS_NUMBER, wantedPage).forEach(result => {
-            resultsDiv.appendChild(result)
-        })
-        fadeIn()
+    if (wantedPage > 0 && wantedPage < nbPages + 1) {
+        let offset = (wantedPage * RESULTS_NUMBER) - RESULTS_NUMBER
+        submitForm(offset)
+        // window.location.href = `index.php?search=${search}&option=${queryOption}&offset=${offset}`
     }
 }
 
@@ -243,7 +250,7 @@ function realTimeDisplay() {
     if (search.length > 3 && (search !== lastSearch && (new Date().getTime() - lastSuggestion) > 500)) {
         lastSearch = search
         lastSuggestion = new Date().getTime()
-        fetch(`api.php?q=suggestion&search=${search}&option=${queryOption}`)
+        fetch(`api.php?q=suggestion&search=${search}&option=${queryOption}&offset=0`)
             .then(response => response.json())
             .then(results => {
                 if (results.data) {
@@ -258,7 +265,7 @@ function realTimeDisplay() {
                         name.innerHTML = elem
                         name.addEventListener('click', () => {
                             searchBar.value = elem
-                            apiRequestThese(elem)
+                            apiRequestThese(elem, 0)
                         })
                         suggestions.appendChild(name)
                     })
@@ -348,16 +355,18 @@ searchBar.addEventListener('focus', () => {
     switchNavTitle(false)
 })
 
-navbarForm.addEventListener('submit', () => {
-    navbarForm.querySelector('input[name="option"]').value = queryOption
+navbarForm.addEventListener('submit', e => {
+    e.preventDefault()
+    submitForm(0)
 })
 
 let urlSearch = urlParams.get('search')
 let urlOption = urlParams.get('option')
+let urlOffset = urlParams.get('offset')
 
 updateFilter(urlOption ? urlOption : 'f-auto')
 
-if (urlSearch) {
+if (urlSearch && urlOption && urlOffset) {
     searchBar.value = urlSearch
-    apiRequestThese(urlSearch)
+    apiRequestThese(urlSearch, urlOffset)
 }

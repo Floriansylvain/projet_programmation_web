@@ -7,12 +7,13 @@
             <path id="crossSvg" class="spin-fade" d="M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81 2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z"/>
         </svg>
 
-        <h1 id="title"><a href="/projet_programmation_web/ProjetProgWeb/">theses.fr</a></h1>
+        <h1 id="title"><a href="index.php">theses.fr</a></h1>
 
         <div class="research-section">
             <form class="navbar-form" method="GET" action="index.php">
-                <input type="text" name="search" placeholder="recherche" onkeyup="realTimeDisplay()" id="searchbar">
+                <input type="text" name="search" placeholder="recherche" onkeyup="realTimeDisplay()" id="searchbar" maxlength="100">
                 <input style="display:none" type="text" name="option">
+                <input style="display:none" type="text" name="offset">
                 <button id="form-button">
                     <img src="assets/search.svg" alt="search" id="search-button" class="animation-in">
                 </button>

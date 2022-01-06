@@ -16,7 +16,7 @@ class dump {
         return date("Y-m-d", strtotime($old_date));
     }
 
-    public static function getTheses(string $search, string $option) : array {
+    public static function getTheses(string $search, string $option, int $offset) : array {
         $theses_array = [];
 
         $pdo_obj = new conf();
@@ -31,16 +31,18 @@ class dump {
                 WHERE author LIKE :search
                   OR title LIKE :search
                   OR these_director LIKE :search
-                  OR soutenance_establishment LIKE :search;
+                  OR soutenance_establishment LIKE :search
+                LIMIT 10 OFFSET :offset;
             "),
-            'author' => $pdo->prepare("SELECT * FROM theses WHERE author LIKE :search ORDER BY author;"),
-            'title' => $pdo->prepare("SELECT * FROM theses WHERE title LIKE :search;"),
-            'director' => $pdo->prepare("SELECT * FROM theses WHERE these_director LIKE :search;"),
-            'establishment' => $pdo->prepare("SELECT * FROM theses WHERE soutenance_establishment LIKE :search;"),
+            'author' => $pdo->prepare("SELECT * FROM theses WHERE author LIKE :search ORDER BY author LIMIT 10 OFFSET :offset;"),
+            'title' => $pdo->prepare("SELECT * FROM theses WHERE title LIKE :search LIMIT 10 OFFSET :offset;"),
+            'director' => $pdo->prepare("SELECT * FROM theses WHERE these_director LIKE :search LIMIT 10 OFFSET :offset;"),
+            'establishment' => $pdo->prepare("SELECT * FROM theses WHERE soutenance_establishment LIKE :search LIMIT 10 OFFSET :offset;"),
             default => "",
         };
 
         $stmt->bindParam(':search', $search, PDO::PARAM_STR, 100);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
         $stmt->execute();
 
         $i = 0;
@@ -72,6 +74,41 @@ class dump {
             'title' => $pdo->prepare("SELECT DISTINCT title FROM theses WHERE title LIKE :search LIMIT 5;"),
             'director' => $pdo->prepare("SELECT DISTINCT these_director FROM theses WHERE these_director LIKE :search LIMIT 10;"),
             'establishment' => $pdo->prepare("SELECT DISTINCT soutenance_establishment FROM theses WHERE soutenance_establishment LIKE :search LIMIT 10;"),
+            default => "",
+        };
+        $stmt->bindParam(':search', $search, PDO::PARAM_STR, 100);
+        $stmt->execute();
+
+        while ($obj = $stmt->fetchObject()) {
+            foreach ($obj as $elem) {
+                array_push($array, $elem);
+            }
+        }
+
+        return $array;
+    }
+
+    public static function getThesesCount(string $search, string $option) : array {
+        $array = [];
+
+        $search = '%' . $search . '%';
+
+        $pdo_obj = new conf();
+        $pdo = $pdo_obj->getPDO();
+
+        $stmt = match ($option) {
+            'auto' => $pdo->prepare("
+                SELECT COUNT(*)
+                FROM theses
+                WHERE author LIKE :search
+                  OR title LIKE :search
+                  OR these_director LIKE :search
+                  OR soutenance_establishment LIKE :search;
+            "),
+            'author' => $pdo->prepare("SELECT COUNT(author) FROM theses WHERE author LIKE :search;"),
+            'title' => $pdo->prepare("SELECT COUNT(title) FROM theses WHERE title LIKE :search;"),
+            'director' => $pdo->prepare("SELECT COUNT(these_director) FROM theses WHERE these_director LIKE :search;"),
+            'establishment' => $pdo->prepare("SELECT COUNT(soutenance_establishment) FROM theses WHERE soutenance_establishment LIKE :search;"),
             default => "",
         };
         $stmt->bindParam(':search', $search, PDO::PARAM_STR, 100);
