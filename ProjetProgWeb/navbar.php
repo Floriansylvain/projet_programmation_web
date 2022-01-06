@@ -7,7 +7,7 @@
             <path id="crossSvg" class="spin-fade" d="M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81 2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z"/>
         </svg>
 
-        <h1 id="title">theses.fr</h1>
+        <h1 id="title"><a href="/projet_programmation_web/ProjetProgWeb/">theses.fr</a></h1>
 
         <div class="research-section">
             <form class="navbar-form" method="GET" action="index.php">
@@ -28,6 +28,7 @@
             <h3>Filtres : </h3>
             <div class="filters">
                 <p id="f-auto">Auto</p>
+                <p id="f-title">Titre</p>
                 <p id="f-author">Auteur</p>
                 <p id="f-director">Directeur</p>
                 <p id="f-establishment">Etablissement</p>

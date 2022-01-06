@@ -146,7 +146,8 @@ function displayResults(results) {
 
             let qTitle = elem[2]
             let title = document.createElement('p')
-            title.innerText = qTitle
+            pre_replacement = new RegExp(searchString, 'gi').exec(qTitle)
+            title.innerHTML = qTitle.replace(pre_replacement, `<mark>${pre_replacement}</mark>`)
 
             let firstElement = document.createElement('div')
             firstElement.classList.add('result-element-header')
@@ -187,7 +188,7 @@ function displayResults(results) {
         })
 
         let nb = document.createElement("p")
-        nb.innerHTML = `Nombre de résultats pour "${searchString}": 
+        nb.innerHTML = `Nombre de résultats en ${queryOption} pour "${searchString}": 
             ${new Intl.NumberFormat('fr-FR', { maximumSignificantDigits: 3 }).format(count)}.`
         resultsCount.appendChild(nb)
 
@@ -245,21 +246,23 @@ function realTimeDisplay() {
         fetch(`api.php?q=suggestion&search=${search}&option=${queryOption}`)
             .then(response => response.json())
             .then(results => {
-                suggestions.innerHTML = ""
-                if (!results.data.length) {
-                    hideSuggestions()
-                } else if (document.activeElement === searchBar) {
-                    showSuggestions()
-                }
-                results.data.forEach(elem => {
-                    let name = document.createElement('p')
-                    name.innerHTML = elem
-                    name.addEventListener('click', () => {
-                        searchBar.value = elem
-                        apiRequestThese(elem)
+                if (results.data) {
+                    suggestions.innerHTML = ""
+                    if (!results.data.length) {
+                        hideSuggestions()
+                    } else if (document.activeElement === searchBar) {
+                        showSuggestions()
+                    }
+                    results.data.forEach(elem => {
+                        let name = document.createElement('p')
+                        name.innerHTML = elem
+                        name.addEventListener('click', () => {
+                            searchBar.value = elem
+                            apiRequestThese(elem)
+                        })
+                        suggestions.appendChild(name)
                     })
-                    suggestions.appendChild(name)
-                })
+                }
             })
     }
 }
@@ -325,7 +328,7 @@ document.addEventListener('click', e => {
             toggleSwitch = e.target.firstElementChild
             toggleSwitchParent = e.target
         }
-        if (toggleSwitch !== null) {
+        if (toggleSwitch !== null && toggleSwitchParent !== null) {
             if (toggleSwitch.classList.contains('untoggle')) {
                 toggleSwitchParent.style.backgroundColor = '#FFF'
                 toggleSwitch.classList.replace('untoggle', 'toggle')

@@ -27,6 +27,13 @@ header {
     height: 75px;
 }
 
+#title a {
+    text-decoration: none;
+    color: inherit;
+    font-size: inherit;
+    font-family: inherit;
+}
+
 .navbar {
     position: relative;
     z-index: 50;

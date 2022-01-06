@@ -55,7 +55,7 @@ class dump {
         return $theses_array;
     }
 
-    public static function getSuggestions(string $search, string $option) : array {
+    public static function getSuggestions(string $search, string $option) : ?array {
         $array = [];
 
         $search = '%' . $search . '%';
@@ -63,7 +63,17 @@ class dump {
         $pdo_obj = new conf();
         $pdo = $pdo_obj->getPDO();
 
-        $stmt = $pdo->prepare("SELECT DISTINCT author FROM theses WHERE author LIKE :search LIMIT 10;");
+        if ($option == 'auto') {
+            return null;
+        }
+
+        $stmt = match ($option) {
+            'author' => $pdo->prepare("SELECT DISTINCT author FROM theses WHERE author LIKE :search LIMIT 10;"),
+            'title' => $pdo->prepare("SELECT DISTINCT title FROM theses WHERE title LIKE :search LIMIT 5;"),
+            'director' => $pdo->prepare("SELECT DISTINCT these_director FROM theses WHERE these_director LIKE :search LIMIT 10;"),
+            'establishment' => $pdo->prepare("SELECT DISTINCT soutenance_establishment FROM theses WHERE soutenance_establishment LIKE :search LIMIT 10;"),
+            default => "",
+        };
         $stmt->bindParam(':search', $search, PDO::PARAM_STR, 100);
         $stmt->execute();
 
