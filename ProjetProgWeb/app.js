@@ -95,7 +95,7 @@ window.addEventListener('scroll', fadeIn);
 
 function updatePageNumber(number) {
     pagesNumbers.childNodes.forEach(elem => {
-        if (elem.innerHTML == number) {
+        if (parseInt(elem.innerHTML) === number) {
             elem.style.fontWeight = "bold"
             elem.style.textDecoration = "underline"
             pagesNumbers.scrollLeft += elem.getBoundingClientRect().left -
@@ -133,7 +133,6 @@ function displayResults(results, aCount) {
         error.classList.add("fade-in");
         errorMessage.innerHTML = results.message
         pagesNumbersContainer.style.display = 'none'
-        return;
     } else if (results.status === 200) {
         count = aCount
         resultsArray = []
