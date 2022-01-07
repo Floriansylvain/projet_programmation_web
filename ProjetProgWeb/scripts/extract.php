@@ -9,25 +9,29 @@ require_once('../class/dotEnv.php');
 
 if (($handle = fopen(getenv('FILE'), "r")) !== FALSE) {
 
+    $dbname = getenv('DBNAME');
+
     $pdo_obj = new conf();
     $pdo = $pdo_obj->getPDO();
-    $stmt = $pdo->query("TRUNCATE `" . getenv('DBNAME') ."`.`theses`");
+    $stmt = $pdo->prepare("TRUNCATE `:dbname`.`theses`");
+    $stmt->bindParam(':dbname', $dbname);
 
     $row = 1;
     while (($data = fgetcsv($handle, 10000, ";")) !== FALSE) {
         $new_these = these::emptyThese();
         $num = count($data);
         if ($row > 1) {
-            for ($c = 0 ; $c < $num ; $c++) {
+            for ($c = 0; $c < $num; $c++) {
                 $new_these->insertField($data[$c], $c);
             }
             $dump = new dump($new_these);
             try {
                 $dump->sendThese($pdo);
             } catch (Exception $e) {
-                echo "<br><br>Failed on " . $row ." ( " . $e->getMessage() . " ) :<br>";
+                echo "<br><br>Failed on " . $row . " ( " . $e->getMessage() . " ) :<br>";
             }
-        } $row++;
+        }
+        $row++;
     }
     fclose($handle);
     echo "<br><br>CSV file imported into DB. (" . $row . " results)";

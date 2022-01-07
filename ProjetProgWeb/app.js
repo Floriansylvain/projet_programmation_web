@@ -26,7 +26,7 @@ let resultsCount = document.querySelector('#results-count')
 let filters = document.querySelectorAll('.filters p')
 
 function sanitize(chain) {
-    return chain.replace(/[^a-zA-Z0-9\- ]/g,'')
+    return chain.replace(/[^a-zA-Z0-9\- ]/g, '')
 }
 
 function showSuggestions() {
@@ -162,7 +162,7 @@ function displayResults(results, aCount) {
             if (elem[14] === 'no') {
                 onlineButton.disabled = true
             } else {
-                onlineButton.onclick = function() {
+                onlineButton.onclick = function () {
                     window.open('https://www.theses.fr/' + elem[13] + '/document', ',_blank')
                 }
             }
@@ -179,7 +179,8 @@ function displayResults(results, aCount) {
                     let pre_replacement = new RegExp(searchString, 'gi').exec(e)
                     child.innerHTML = e.replace(pre_replacement, `<mark>${pre_replacement}</mark>`)
                     content.appendChild(child)
-                } i += 1
+                }
+                i += 1
             })
 
             header.addEventListener('click', () => {
@@ -193,14 +194,14 @@ function displayResults(results, aCount) {
 
         let nb = document.createElement("p")
         nb.innerHTML = `Nombre de résultats en ${queryOption} pour "${searchString}": 
-            ${new Intl.NumberFormat('fr-FR', { maximumSignificantDigits: 3 }).format(count)}.`
+            ${new Intl.NumberFormat('fr-FR', {maximumSignificantDigits: 3}).format(count)}.`
         resultsCount.appendChild(nb)
 
         loader.style.display = "none"
 
         nbPages = Math.ceil(count / RESULTS_NUMBER)
 
-        for (let i = 0 ; i < nbPages ; i++) {
+        for (let i = 0; i < nbPages; i++) {
             let number = document.createElement('p')
             number.innerHTML = i + 1
             if (i === 0)
