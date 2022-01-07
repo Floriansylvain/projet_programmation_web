@@ -72,13 +72,7 @@ function apiRequestThese(search, offset) {
             .then(data => {
                 fetch(`api.php?q=count&search=${searchString}&option=${queryOption}&offset=0`)
                     .then(response => response.json())
-                    .then(aCount => {
-                        if (aCount.data) {
-                            displayResults(data, aCount.data[0])
-                        } else {
-                            displayResults(data, 0)
-                        }
-                    })
+                    .then(aCount => displayResults(data, aCount.data ? aCount.data[0] : 0))
             })
     } else {
         alert('Veuillez attendre une seconde entre chaque recherche.')
