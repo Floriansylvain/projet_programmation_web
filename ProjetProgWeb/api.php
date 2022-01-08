@@ -24,6 +24,8 @@ $json_object = match ($q) {
     "theses" => dump::getTheses($search, $option, $offset),
     "suggestion" => dump::getSuggestions($search, $option),
     "count" => dump::getThesesCount($search, $option),
+    "years" => dump::getThesesYears($search, $option),
+    "disciplines" => dump::getThesesDisciplines($search, $option),
     default => NULL,
 };
 

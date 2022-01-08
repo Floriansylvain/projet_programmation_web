@@ -66,6 +66,7 @@ function apiRequestThese(search, offset) {
         emptyResults(true)
         pagesNumbers.innerHTML = ""
         loader.style.display = "block"
+        pagesNumbersContainer.style.display = 'none'
         searchString = sanitize(search)
         fetch(`api.php?q=theses&search=${searchString}&option=${queryOption}&offset=${offset}`)
             .then(response => response.json())
@@ -132,7 +133,6 @@ function displayResults(results, aCount) {
         error.classList.remove("fade-out");
         error.classList.add("fade-in");
         errorMessage.innerHTML = results.message
-        pagesNumbersContainer.style.display = 'none'
     } else if (results.status === 200) {
         count = aCount
         resultsArray = []
