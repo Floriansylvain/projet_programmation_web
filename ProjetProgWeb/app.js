@@ -308,6 +308,10 @@ function updateFilter(f) {
     document.querySelector('#f-' + queryOption).style.boxShadow = 'inset rgba(0, 0, 0, 0.40) 0 0 5px'
 }
 
+function scrollTop() {
+    window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
 document.addEventListener('click', e => {
     if (e.target.id !== 'suggestions' && e.target !== searchBar && e.target !== searchBarButton) {
 
@@ -347,6 +351,10 @@ document.addEventListener('click', e => {
         if (e.target.id.toString().includes('f-')) {
             updateFilter(e.target.id)
         }
+
+        if (e.target.classList.contains('scroll-to-top')) {
+            scrollTop()
+        }
     }
 })
 
@@ -357,6 +365,14 @@ searchBar.addEventListener('focus', () => {
 navbarForm.addEventListener('submit', e => {
     e.preventDefault()
     submitForm(0)
+})
+
+document.addEventListener('scroll', e => {
+    if (window.scrollY != 0) {
+        document.querySelector('#scrollToTop').style.display = 'block'
+    } else {
+        document.querySelector('#scrollToTop').style.display = 'none'
+    }
 })
 
 let urlSearch = urlParams.get('search')

@@ -392,6 +392,33 @@ header {
     margin-left: auto;
 }
 
+#scrollToTop {
+    display: none;
+    position: fixed;
+    z-index: 20;
+    padding: 20px;
+    box-shadow: #302B2B33 2px 2px 10px;
+    background: #0096DC;
+    border-radius: 50%;
+    height: 60px;
+    width: 60px;
+    fill: white;
+    bottom: 25px;
+    left: 25px;
+    cursor: pointer;
+    transition: background-color 200ms, transform 200ms;
+}
+
+#scrollToTop:hover {
+    background: #1881b2;
+    transform: scale(1.05);
+}
+
+#scrollToTop svg {
+    width: 20px;
+    height: 20px;
+}
+
 .loader {
     display: none;
     width: 150px;

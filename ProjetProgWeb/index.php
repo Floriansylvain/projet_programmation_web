@@ -39,11 +39,15 @@
             <h1 style="color:#CFCFCF;text-align: center">Bienvenue sur theses.fr</h1>
         </div>
 
-        <!-- TODO Bouton pour remonter en haut de la page -->
+        <div id="scrollToTop" class="scroll-to-top">
+            <svg class="scroll-to-top" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <path class="scroll-to-top" d="M23.677 18.52c.914 1.523-.183 3.472-1.967 3.472h-19.414c-1.784 0-2.881-1.949-1.967-3.472l9.709-16.18c.891-1.483 3.041-1.48 3.93 0l9.709 16.18z"/>
+            </svg>
+        </div>
 
         <div id="error">
             <div id="error-message"></div>
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" id="error-button">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="error-button">
                 <path d="M23.954 21.03l-9.184-9.095 9.092-9.174-2.832-2.807-9.09 9.179-9.176-9.088-2.81 2.81 9.186 9.105-9.095 9.184 2.81 2.81 9.112-9.192 9.18 9.1z"/>
             </svg>
         </div>
