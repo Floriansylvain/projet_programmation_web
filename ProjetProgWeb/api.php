@@ -10,7 +10,7 @@ if (!isset($_GET['q']) || !isset($_GET['search']) || !isset($_GET['option']) || 
 
 $q = $_GET['q'];
 $search = filter_var($_GET['search'], FILTER_SANITIZE_ADD_SLASHES);
-$option = $_GET['option'];
+$option = $_GET['option']; // TODO Ajouter l'option Discipline
 $offset = $_GET['offset'];
 
 if (strlen($search) < 3) {

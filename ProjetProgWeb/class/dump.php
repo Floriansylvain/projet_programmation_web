@@ -134,20 +134,64 @@ class dump {
 
         $stmt = match ($option) {
             'auto' => $pdo->prepare("
-                SELECT DATE_FORMAT(date_soutenance, '%Y') AS Date,
-                       COUNT(DATE_FORMAT(date_soutenance, '%Y')) AS Number
-                FROM theses
-                WHERE author LIKE :search
-                  OR title LIKE :search
-                  OR these_director LIKE :search
-                  OR soutenance_establishment LIKE :search
-                GROUP BY Date
-                ORDER BY Date;
+                SELECT Date, theses_online, theses_offline
+                FROM (SELECT DATE_FORMAT(date_soutenance, '%Y') AS Date,
+                             COUNT(DATE_FORMAT(date_soutenance, '%Y')) AS theses_online
+                      FROM theses
+                      WHERE `online` LIKE 'yes'
+                        AND (author LIKE :search
+                         OR title LIKE :search
+                         OR these_director LIKE :search
+                         OR soutenance_establishment LIKE :search)
+                      GROUP BY Date) t_online
+                NATURAL JOIN (
+                       SELECT DATE_FORMAT(date_soutenance, '%Y') AS Date,
+                              COUNT(DATE_FORMAT(date_soutenance, '%Y')) AS theses_offline
+                      FROM theses
+                      WHERE `online` LIKE 'no'
+                         AND (author LIKE :search
+                         OR title LIKE :search
+                         OR these_director LIKE :search
+                         OR soutenance_establishment LIKE :search)
+                      GROUP BY Date) t_offline
+                ORDER BY `t_online`.`Date`;
             "),
-            'author' => $pdo->prepare("SELECT DATE_FORMAT(date_soutenance, '%Y') AS Date, COUNT(DATE_FORMAT(date_soutenance, '%Y')) AS Number FROM theses WHERE author LIKE :search GROUP BY Date ORDER BY Date;"),
-            'title' => $pdo->prepare("SELECT DATE_FORMAT(date_soutenance, '%Y') AS Date, COUNT(DATE_FORMAT(date_soutenance, '%Y')) AS Number FROM theses WHERE title LIKE :search GROUP BY Date ORDER BY Date;"),
-            'director' => $pdo->prepare("SELECT DATE_FORMAT(date_soutenance, '%Y') AS Date, COUNT(DATE_FORMAT(date_soutenance, '%Y')) AS Number FROM theses WHERE these_director LIKE :search GROUP BY Date ORDER BY Date;"),
-            'establishment' => $pdo->prepare("SELECT DATE_FORMAT(date_soutenance, '%Y') AS Date, COUNT(DATE_FORMAT(date_soutenance, '%Y')) AS Number FROM theses WHERE soutenance_establishment LIKE :search GROUP BY Date ORDER BY Date;"),
+            'author' => $pdo->prepare("
+                SELECT Date, theses_online, theses_offline
+                FROM (SELECT DATE_FORMAT(date_soutenance, '%Y') AS Date,
+                             COUNT(DATE_FORMAT(date_soutenance, '%Y')) AS theses_online
+                      FROM theses WHERE `online` LIKE 'yes' AND author LIKE :search GROUP BY Date) t_online
+                NATURAL JOIN (SELECT DATE_FORMAT(date_soutenance, '%Y') AS Date,
+                                              COUNT(DATE_FORMAT(date_soutenance, '%Y')) AS theses_offline
+                              FROM theses WHERE `online` LIKE 'no' AND author LIKE :search GROUP BY Date) t_offline
+                ORDER BY `t_online`.`Date`;"),
+            'title' => $pdo->prepare("
+                SELECT Date, theses_online, theses_offline
+                FROM (SELECT DATE_FORMAT(date_soutenance, '%Y') AS Date,
+                             COUNT(DATE_FORMAT(date_soutenance, '%Y')) AS theses_online
+                      FROM theses WHERE `online` LIKE 'yes' AND title LIKE :search GROUP BY Date) t_online
+                NATURAL JOIN (SELECT DATE_FORMAT(date_soutenance, '%Y') AS Date,
+                                              COUNT(DATE_FORMAT(date_soutenance, '%Y')) AS theses_offline
+                              FROM theses WHERE `online` LIKE 'no' AND title LIKE :search GROUP BY Date) t_offline
+                ORDER BY `t_online`.`Date`;"),
+            'director' => $pdo->prepare("
+                SELECT Date, theses_online, theses_offline
+                FROM (SELECT DATE_FORMAT(date_soutenance, '%Y') AS Date,
+                             COUNT(DATE_FORMAT(date_soutenance, '%Y')) AS theses_online
+                      FROM theses WHERE `online` LIKE 'yes' AND these_director LIKE :search GROUP BY Date) t_online
+                NATURAL JOIN (SELECT DATE_FORMAT(date_soutenance, '%Y') AS Date,
+                                              COUNT(DATE_FORMAT(date_soutenance, '%Y')) AS theses_offline
+                              FROM theses WHERE `online` LIKE 'no' AND these_director LIKE :search GROUP BY Date) t_offline
+                ORDER BY `t_online`.`Date`;"),
+            'establishment' => $pdo->prepare("
+                SELECT Date, theses_online, theses_offline
+                FROM (SELECT DATE_FORMAT(date_soutenance, '%Y') AS Date,
+                             COUNT(DATE_FORMAT(date_soutenance, '%Y')) AS theses_online
+                      FROM theses WHERE `online` LIKE 'yes' AND soutenance_establishment LIKE :search GROUP BY Date) t_online
+                NATURAL JOIN (SELECT DATE_FORMAT(date_soutenance, '%Y') AS Date,
+                                              COUNT(DATE_FORMAT(date_soutenance, '%Y')) AS theses_offline
+                              FROM theses WHERE `online` LIKE 'no' AND soutenance_establishment LIKE :search GROUP BY Date) t_offline
+                ORDER BY `t_online`.`Date`;"),
             default => "",
         };
 
@@ -156,8 +200,12 @@ class dump {
 
         $i = 0;
         while ($obj = $stmt->fetchObject()) {
-            $years_array[$i] = array();
-            $years_array[$i][$obj->Date] = $obj->Number;
+            $years_array[$i] = array(
+                $obj->Date => array(
+                    "online" => $obj->theses_online,
+                    "offline" => $obj->theses_offline
+                )
+            );
             $i++;
         }
 
@@ -197,8 +245,9 @@ class dump {
 
         $i = 0;
         while ($obj = $stmt->fetchObject()) {
-            $disciplines_array[$i] = array();
-            $disciplines_array[$i][$obj->Discipline] = $obj->Number;
+            $disciplines_array[$i] = array(
+                $obj->Discipline => $obj->Number
+            );
             $i++;
         }
 
@@ -236,8 +285,9 @@ class dump {
 
         $i = 0;
         while ($obj = $stmt->fetchObject()) {
-            $establishments_array[$i] = array();
-            $establishments_array[$i][$obj->Establishment] = $obj->Number;
+            $establishments_array[$i] = array(
+                $obj->Establishment => $obj->Number
+            );
             $i++;
         }
 
