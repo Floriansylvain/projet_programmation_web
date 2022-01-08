@@ -144,15 +144,15 @@ function displayResults(results, aCount) {
 
             let header = document.createElement('div')
 
-            let qAuthor = elem[0]
-            let author = document.createElement('h3')
-            let pre_replacement = new RegExp(searchString, 'gi').exec(qAuthor)
-            author.innerHTML = qAuthor.replace(pre_replacement, `<mark>${pre_replacement}</mark>`)
-
             let qTitle = elem[2]
-            let title = document.createElement('p')
-            pre_replacement = new RegExp(searchString, 'gi').exec(qTitle)
+            let title = document.createElement('h3')
+            let pre_replacement = new RegExp(searchString, 'gi').exec(qTitle)
             title.innerHTML = qTitle.replace(pre_replacement, `<mark>${pre_replacement}</mark>`)
+
+            let qAuthor = elem[0]
+            let author = document.createElement('p')
+            pre_replacement = new RegExp(searchString, 'gi').exec(qAuthor)
+            author.innerHTML = qAuthor.replace(pre_replacement, `<mark>${pre_replacement}</mark>`)
 
             let firstElement = document.createElement('div')
             firstElement.classList.add('result-element-header')
@@ -167,8 +167,8 @@ function displayResults(results, aCount) {
                 }
             }
 
-            firstElement.append(author, onlineButton)
-            header.append(firstElement, title)
+            firstElement.append(title, onlineButton)
+            header.append(firstElement, author)
 
             let content = document.createElement('div')
             content.classList.add('element-content')

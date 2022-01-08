@@ -312,6 +312,10 @@ header {
     transform: translateX(100px);
 }
 
+.result-element-header + p {
+    margin-top: 0;
+}
+
 .result-element:hover {
     box-shadow: rgba(0, 0, 0, 0.15) 2px 2px 15px;
 }
@@ -320,15 +324,6 @@ header {
     display: flex;
     align-items: center;
     cursor: pointer;
-}
-
-.result-element h3 {
-    overflow-wrap: break-word;
-}
-
-.result-element-header {
-    display: flex;
-    align-items: center;
 }
 
 .result-element-header button {

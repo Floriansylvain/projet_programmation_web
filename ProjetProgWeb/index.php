@@ -54,6 +54,7 @@
 
         <!-- TODO Footer avec lien vers depot github -->
 
+        <script src="https://code.highcharts.com/highcharts.src.js"></script>
         <script src="app.js"></script>
 
     </body>
