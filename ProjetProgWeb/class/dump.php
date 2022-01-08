@@ -49,6 +49,7 @@ class dump {
         while ($obj = $stmt->fetchObject()) {
             $theses_array[$i] = array();
             foreach ($obj as $elem) {
+                // TODO Mettre le nom du champ à la place du vide
                 $theses_array[$i][] = empty($elem) ? "Non définit" : $elem;
             }
             $i++;
@@ -135,7 +136,7 @@ class dump {
             'auto' => $pdo->prepare("
                 SELECT DATE_FORMAT(date_soutenance, '%Y') AS Date,
                        COUNT(DATE_FORMAT(date_soutenance, '%Y')) AS Number
-                FROM `theses`
+                FROM theses
                 WHERE author LIKE :search
                   OR title LIKE :search
                   OR these_director LIKE :search
@@ -143,10 +144,10 @@ class dump {
                 GROUP BY Date
                 ORDER BY Date;
             "),
-            'author' => $pdo->prepare("SELECT DATE_FORMAT(date_soutenance, '%Y') AS Date, COUNT(DATE_FORMAT(date_soutenance, '%Y')) AS Number FROM `theses` WHERE author LIKE :search GROUP BY Date ORDER BY Date;"),
-            'title' => $pdo->prepare("SELECT DATE_FORMAT(date_soutenance, '%Y') AS Date, COUNT(DATE_FORMAT(date_soutenance, '%Y')) AS Number FROM `theses` WHERE title LIKE :search GROUP BY Date ORDER BY Date;"),
-            'director' => $pdo->prepare("SELECT DATE_FORMAT(date_soutenance, '%Y') AS Date, COUNT(DATE_FORMAT(date_soutenance, '%Y')) AS Number FROM `theses` WHERE these_director LIKE :search GROUP BY Date ORDER BY Date;"),
-            'establishment' => $pdo->prepare("SELECT DATE_FORMAT(date_soutenance, '%Y') AS Date, COUNT(DATE_FORMAT(date_soutenance, '%Y')) AS Number FROM `theses` WHERE soutenance_establishment LIKE :search GROUP BY Date ORDER BY Date;"),
+            'author' => $pdo->prepare("SELECT DATE_FORMAT(date_soutenance, '%Y') AS Date, COUNT(DATE_FORMAT(date_soutenance, '%Y')) AS Number FROM theses WHERE author LIKE :search GROUP BY Date ORDER BY Date;"),
+            'title' => $pdo->prepare("SELECT DATE_FORMAT(date_soutenance, '%Y') AS Date, COUNT(DATE_FORMAT(date_soutenance, '%Y')) AS Number FROM theses WHERE title LIKE :search GROUP BY Date ORDER BY Date;"),
+            'director' => $pdo->prepare("SELECT DATE_FORMAT(date_soutenance, '%Y') AS Date, COUNT(DATE_FORMAT(date_soutenance, '%Y')) AS Number FROM theses WHERE these_director LIKE :search GROUP BY Date ORDER BY Date;"),
+            'establishment' => $pdo->prepare("SELECT DATE_FORMAT(date_soutenance, '%Y') AS Date, COUNT(DATE_FORMAT(date_soutenance, '%Y')) AS Number FROM theses WHERE soutenance_establishment LIKE :search GROUP BY Date ORDER BY Date;"),
             default => "",
         };
 
@@ -175,7 +176,7 @@ class dump {
             'auto' => $pdo->prepare("
                 SELECT discipline AS Discipline,
                         COUNT(discipline) AS Number
-                FROM `theses`
+                FROM theses
                 WHERE author LIKE :search
                   OR title LIKE :search
                   OR these_director LIKE :search
@@ -184,10 +185,10 @@ class dump {
                 ORDER BY `Number` DESC
                 LIMIT 10
             "),
-            'author' => $pdo->prepare("SELECT discipline AS Discipline, COUNT(discipline) AS Number FROM `theses` WHERE author LIKE :search GROUP BY Discipline ORDER BY `Number` DESC LIMIT 10;"),
-            'title' => $pdo->prepare("SELECT discipline AS Discipline, COUNT(discipline) AS Number FROM `theses` WHERE title LIKE :search GROUP BY Discipline ORDER BY `Number` DESC LIMIT 10;"),
-            'director' => $pdo->prepare("SELECT discipline AS Discipline, COUNT(discipline) AS Number FROM `theses` WHERE these_director LIKE :search GROUP BY Discipline ORDER BY `Number` DESC LIMIT 10;"),
-            'establishment' => $pdo->prepare("SELECT discipline AS Discipline, COUNT(discipline) AS Number FROM `theses` WHERE soutenance_establishment LIKE :search GROUP BY Discipline ORDER BY `Number` DESC LIMIT 10;"),
+            'author' => $pdo->prepare("SELECT discipline AS Discipline, COUNT(discipline) AS Number FROM theses WHERE author LIKE :search GROUP BY Discipline ORDER BY `Number` DESC LIMIT 10;"),
+            'title' => $pdo->prepare("SELECT discipline AS Discipline, COUNT(discipline) AS Number FROM theses WHERE title LIKE :search GROUP BY Discipline ORDER BY `Number` DESC LIMIT 10;"),
+            'director' => $pdo->prepare("SELECT discipline AS Discipline, COUNT(discipline) AS Number FROM theses WHERE these_director LIKE :search GROUP BY Discipline ORDER BY `Number` DESC LIMIT 10;"),
+            'establishment' => $pdo->prepare("SELECT discipline AS Discipline, COUNT(discipline) AS Number FROM theses WHERE soutenance_establishment LIKE :search GROUP BY Discipline ORDER BY `Number` DESC LIMIT 10;"),
             default => "",
         };
 
@@ -202,6 +203,45 @@ class dump {
         }
 
         return $disciplines_array;
+    }
+
+    public static function getThesesEstablishments(string $search, string $option) : array {
+        $establishments_array = [];
+
+        $pdo_obj = new conf();
+        $pdo = $pdo_obj->getPDO();
+
+        $search = '%' . $search . '%';
+
+        $stmt = match ($option) {
+            'auto' => $pdo->prepare("
+                SELECT soutenance_establishment AS Establishment,
+                        COUNT(soutenance_establishment) AS Number
+                FROM theses
+                WHERE author LIKE :search
+                  OR title LIKE :search
+                  OR these_director LIKE :search
+                GROUP BY Establishment
+                ORDER BY `Number` DESC
+                LIMIT 10;
+            "),
+            'author' => $pdo->prepare("SELECT soutenance_establishment AS Establishment, COUNT(soutenance_establishment) AS Number FROM theses WHERE author LIKE :search GROUP BY Establishment ORDER BY `Number` DESC LIMIT 10;"),
+            'title' => $pdo->prepare("SELECT soutenance_establishment AS Establishment, COUNT(soutenance_establishment) AS Number FROM theses WHERE title LIKE :search GROUP BY Establishment ORDER BY `Number` DESC LIMIT 10;"),
+            'director' => $pdo->prepare("SELECT soutenance_establishment AS Establishment, COUNT(soutenance_establishment) AS Number FROM theses WHERE theses.these_director LIKE :search GROUP BY Establishment ORDER BY `Number` DESC LIMIT 10;"),
+            default => "",
+        };
+
+        $stmt->bindParam(':search', $search, PDO::PARAM_STR, 100);
+        $stmt->execute();
+
+        $i = 0;
+        while ($obj = $stmt->fetchObject()) {
+            $establishments_array[$i] = array();
+            $establishments_array[$i][$obj->Establishment] = $obj->Number;
+            $i++;
+        }
+
+        return $establishments_array;
     }
 
     public function sendThese($pdo) {

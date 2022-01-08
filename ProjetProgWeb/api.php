@@ -2,7 +2,8 @@
 
 require_once("class/dump.php");
 
-if (!isset($_GET['q']) || !isset($_GET['search']) || !isset($_GET['option']) || !isset($_GET['offset'])) {
+if (!isset($_GET['q']) || !isset($_GET['search']) || !isset($_GET['option']) || !isset($_GET['offset']) ||
+    ($_GET['option'] == 'establishment' && $_GET['q'] == 'establishment')) {
     print_r(json_encode(array("status" => 400, "message" => "Missing query type or attributes.")));
     exit();
 }
@@ -26,6 +27,7 @@ $json_object = match ($q) {
     "count" => dump::getThesesCount($search, $option),
     "years" => dump::getThesesYears($search, $option),
     "disciplines" => dump::getThesesDisciplines($search, $option),
+    "establishment" => dump::getThesesEstablishments($search, $option),
     default => NULL,
 };
 

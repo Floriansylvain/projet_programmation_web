@@ -7,5 +7,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="highcharts.src" level="application" />
+    <orderEntry type="library" name="variable-pie" level="application" />
   </component>
 </module>
