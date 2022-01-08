@@ -302,10 +302,10 @@ function updateFilter(f) {
     }
 
     filters.forEach(elem => {
-        elem.style.boxShadow = 'none'
+        elem.classList.remove('selected')
     })
 
-    document.querySelector('#f-' + queryOption).style.boxShadow = 'inset rgba(0, 0, 0, 0.40) 0 0 5px'
+    document.querySelector('#f-' + queryOption).classList.add('selected')
 }
 
 function scrollTop() {
@@ -367,8 +367,8 @@ navbarForm.addEventListener('submit', e => {
     submitForm(0)
 })
 
-document.addEventListener('scroll', e => {
-    if (window.scrollY != 0) {
+document.addEventListener('scroll', () => {
+    if (window.scrollY !== 0) {
         document.querySelector('#scrollToTop').style.display = 'block'
     } else {
         document.querySelector('#scrollToTop').style.display = 'none'

@@ -203,6 +203,11 @@ header {
     background-color: #6dc1e3;
 }
 
+.selected {
+    background-color: #1c6480 !important;
+    box-shadow: inset #0003 0 0 5px;
+}
+
 .slide-in {
     animation: slide-in 200ms;
     animation-fill-mode: forwards;
