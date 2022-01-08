@@ -30,9 +30,9 @@
         <div id="results-count"></div>
 
         <div class="page-nav">
-            <p onclick="browseResults(currentPage - 1)">&#60;-</p>
+            <p onclick="browseResults(1)">&#60;-</p>
             <div></div>
-            <p onclick="browseResults(currentPage + 1)">-&#62;</p>
+            <p onclick="browseResults(nbPages)">-&#62;</p>
         </div>
 
         <div id="results">
