@@ -57,8 +57,8 @@ function showError(message) {
     errorMessage.innerHTML = message
 }
 
-function hideCharts() {
-    // TODO À faire notamment pour le toggle switch qui alterne le site avec et sans charts
+function switchCharts(q) {
+    navbarForm.querySelector('input[name="charts"]').value = q ? "enabled" : "disabled"
 }
 
 function showCharts() {
@@ -172,7 +172,11 @@ function displayResults(results, aCount) {
         hideLoading()
         showError(results.message)
     } else if (results.status === 200) {
-        initCharts(searchString, queryOption) // TODO Ne pas faire si toggleSwitch désactivé ou si moins de 10 résultats
+        if (urlCharts === "enabled") {
+            initCharts(searchString, queryOption)
+        } else {
+            chartsState = true
+        }
         count = aCount
         resultsArray = []
         pagesNumbersContainer.style.display = 'flex'
@@ -264,7 +268,9 @@ function displayResults(results, aCount) {
         let waitForPageToLoad = setInterval(function() {
             if (chartsState) {
                 hideLoading()
-                showCharts()
+                if (urlCharts === "enabled") {
+                    showCharts()
+                }
                 clearInterval(waitForPageToLoad);
             }
         }, 100)
@@ -387,9 +393,15 @@ document.addEventListener('click', e => {
             if (toggleSwitch.classList.contains('untoggle')) {
                 toggleSwitchParent.style.backgroundColor = '#FFF'
                 toggleSwitch.classList.replace('untoggle', 'toggle')
+                if (toggleSwitch.classList.contains('switch-charts')) {
+                    switchCharts(true)
+                }
             } else {
                 toggleSwitchParent.style.backgroundColor = '#ECECEC'
                 toggleSwitch.classList.replace('toggle', 'untoggle')
+                if (toggleSwitch.classList.contains('switch-charts')) {
+                    switchCharts(false)
+                }
             }
         }
 
@@ -423,8 +435,20 @@ document.addEventListener('scroll', () => {
 let urlSearch = urlParams.get('search')
 let urlOption = urlParams.get('option')
 let urlOffset = urlParams.get('offset')
+let urlCharts = (urlParams.get('charts') === "" ? "enabled" : urlParams.get('charts'))
 
 updateFilter(urlOption ? urlOption : 'f-auto')
+
+let toRemove = 'untoggle'
+let toAdd = 'toggle'
+
+if (urlCharts === "disabled") {
+    toRemove = "toggle"
+    toAdd = "untoggle"
+}
+
+document.querySelector('.switch-charts').classList.remove(toRemove)
+document.querySelector('.switch-charts').classList.add(toAdd)
 
 if (urlSearch && urlOption && urlOffset) {
     searchBar.value = urlSearch
