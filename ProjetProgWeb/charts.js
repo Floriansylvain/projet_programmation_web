@@ -69,7 +69,7 @@ function initYearsChart(results) {
     })
 
     chart1State = true
-    console.log("chargment graphique 1 terminé")
+    console.log("chargement graphique 1 terminé")
 }
 
 function initDisciplinesChart(results) {
@@ -112,6 +112,7 @@ function initDisciplinesChart(results) {
     })
 
     chart2State = true
+    console.log("chargement graphique 2 terminé")
 }
 
 function initEstablishmentsChart(results) {
@@ -154,7 +155,7 @@ function initEstablishmentsChart(results) {
     })
 
     chart3State = true
-    console.log("chargment graphique 3 terminé")
+    console.log("chargement graphique 3 terminé")
 }
 
 function initMapVisuals(data) {
