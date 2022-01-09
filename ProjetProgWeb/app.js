@@ -172,7 +172,7 @@ function displayResults(results, aCount) {
         hideLoading()
         showError(results.message)
     } else if (results.status === 200) {
-        initCharts(searchString, queryOption)
+        initCharts(searchString, queryOption) // TODO Ne pas faire si toggleSwitch désactivé ou si moins de 10 résultats
         count = aCount
         resultsArray = []
         pagesNumbersContainer.style.display = 'flex'
