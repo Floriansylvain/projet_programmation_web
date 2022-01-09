@@ -29,18 +29,19 @@
             </svg>
         </div>
 
-        <div id="charts">
-            <div class="chart" id="years"></div>
-            <div class="chart" id="disciplines"></div>
-            <div class="chart" id="establishments"></div>
-        </div>
-
         <div id="results-count"></div>
 
         <div class="page-nav">
             <p onclick="browseResults(1)">&#60;-</p>
             <div></div>
             <p onclick="browseResults(nbPages)">-&#62;</p>
+        </div>
+
+        <div id="charts">
+            <div class="chart" id="years"></div>
+            <div class="chart" id="disciplines"></div>
+            <div class="chart" id="establishments"></div>
+            <div class="chart" id="map"></div>
         </div>
 
         <div id="results">
@@ -63,6 +64,12 @@
         <!-- TODO Footer avec lien vers depot github -->
 
         <script src="https://code.highcharts.com/highcharts.src.js"></script>
+        <script src="assets/proj4.js"></script>
+        <script src="https://code.highcharts.com/maps/modules/map.js"></script>
+        <script src="https://code.highcharts.com/maps/modules/data.js"></script>
+        <script src="https://code.highcharts.com/maps/modules/exporting.js"></script>
+        <script src="https://code.highcharts.com/maps/modules/offline-exporting.js"></script>
+        <script src="https://code.highcharts.com/mapdata/countries/fr/fr-all.js"></script>
         <script src="charts.js"></script>
         <script src="app.js"></script>
 

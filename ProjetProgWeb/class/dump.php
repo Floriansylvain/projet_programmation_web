@@ -254,6 +254,7 @@ class dump {
         return $disciplines_array;
     }
 
+    // SET sql_mode=''; au lieu de SET sql_mode='ONLY_FULL_GROUP_BY';
     public static function getThesesEstablishments(string $search, string $option) : array {
         $establishments_array = [];
 
@@ -265,19 +266,20 @@ class dump {
         $stmt = match ($option) {
             'auto' => $pdo->prepare("
                 SELECT soutenance_establishment AS Establishment,
-                        COUNT(soutenance_establishment) AS Number
+                       COUNT(soutenance_establishment) AS Number,
+                       id_establishment AS ID
                 FROM theses
                 WHERE author LIKE :search
                   OR title LIKE :search
                   OR these_director LIKE :search
+                  OR soutenance_establishment LIKE :search
                 GROUP BY Establishment
-                ORDER BY `Number` DESC
-                LIMIT 10;
+                ORDER BY Number DESC LIMIT 10
             "),
-            'author' => $pdo->prepare("SELECT soutenance_establishment AS Establishment, COUNT(soutenance_establishment) AS Number FROM theses WHERE author LIKE :search GROUP BY Establishment ORDER BY `Number` DESC LIMIT 10;"),
-            'title' => $pdo->prepare("SELECT soutenance_establishment AS Establishment, COUNT(soutenance_establishment) AS Number FROM theses WHERE title LIKE :search GROUP BY Establishment ORDER BY `Number` DESC LIMIT 10;"),
-            'director' => $pdo->prepare("SELECT soutenance_establishment AS Establishment, COUNT(soutenance_establishment) AS Number FROM theses WHERE these_director LIKE :search GROUP BY Establishment ORDER BY `Number` DESC LIMIT 10;"),
-            'establishment' => $pdo->prepare("SELECT soutenance_establishment AS Establishment, COUNT(soutenance_establishment) AS Number FROM theses WHERE soutenance_establishment LIKE :search GROUP BY Establishment ORDER BY `Number` DESC LIMIT 10;"),
+            'author' => $pdo->prepare("SELECT soutenance_establishment AS Establishment, COUNT(soutenance_establishment) AS Number, id_establishment AS ID FROM theses WHERE author LIKE :search GROUP BY Establishment ORDER BY `Number` DESC LIMIT 10;"),
+            'title' => $pdo->prepare("SELECT soutenance_establishment AS Establishment, COUNT(soutenance_establishment) AS Number, id_establishment AS ID FROM theses WHERE title LIKE :search GROUP BY Establishment ORDER BY `Number` DESC LIMIT 10;"),
+            'director' => $pdo->prepare("SELECT soutenance_establishment AS Establishment, COUNT(soutenance_establishment) AS Number, id_establishment AS ID FROM theses WHERE these_director LIKE :search GROUP BY Establishment ORDER BY `Number` DESC LIMIT 10;"),
+            'establishment' => $pdo->prepare("SELECT soutenance_establishment AS Establishment, COUNT(soutenance_establishment) AS Number, id_establishment AS ID FROM theses WHERE soutenance_establishment LIKE :search GROUP BY Establishment ORDER BY `Number` DESC LIMIT 10;"),
             default => "",
         };
 
@@ -287,7 +289,10 @@ class dump {
         $i = 0;
         while ($obj = $stmt->fetchObject()) {
             $establishments_array[$i] = array(
-                $obj->Establishment => $obj->Number
+                $obj->Establishment => array(
+                    "number" => $obj->Number,
+                    "ID" => $obj->ID
+                )
             );
             $i++;
         }

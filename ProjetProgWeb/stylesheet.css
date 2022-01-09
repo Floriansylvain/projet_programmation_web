@@ -165,7 +165,7 @@ header {
 
 #hamburger-menu {
     position: relative;
-    z-index: 10;
+    z-index: 25;
     width: 100%;
     background: linear-gradient(245deg, #39B4E7 -15%, #1779A3 110%);
     box-shadow: rgba(0, 0, 0, 0.15) 2px 2px 5px;
@@ -181,6 +181,20 @@ header {
     color: white;
     padding: 0;
     margin: 0;
+}
+
+#hamburger-menu > div {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+#hamburger-menu > div + div {
+}
+
+#hamburger-menu > div + div > div {
+    display: flex;
+    gap: 15px;
 }
 
 .filters {
@@ -292,7 +306,9 @@ header {
 #results {
     padding: 10px;
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
     gap: 15px;
     overflow-x: hidden;
 }
@@ -304,6 +320,8 @@ header {
 
 .result-element {
     display: flex;
+    width: 100%;
+    max-width: 768px;
     flex-direction: column;
     box-shadow: rgba(0, 0, 0, 0.05) 2px 2px 15px;
     border-radius: 25px;
@@ -543,14 +561,17 @@ header {
 
 #charts {
     display: none;
-    flex-direction: column;
+    flex-wrap: wrap;
     align-items: center;
+    justify-content: center;
     padding: 15px;
     gap: 10px;
 }
 
 .chart {
     width: 100%;
+    max-width: 500px;
+    min-width: 300px;
     border-radius: 25px;
     padding: 15px;
     box-shadow: rgba(0, 0, 0, 0.05) 2px 2px 15px;
@@ -572,10 +593,6 @@ header {
 
 /* Medium */
 @media (min-width: 768px) {
-    .result-element {
-        width: 768px;
-        margin: auto;
-    }
     #hamburger-menu {
         flex-direction: row;
     }

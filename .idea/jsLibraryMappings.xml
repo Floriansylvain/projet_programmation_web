@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="JavaScriptLibraryMappings">
-    <file url="PROJECT" libraries="{highcharts.src, variable-pie}" />
+    <file url="PROJECT" libraries="{data, exporting, fr-all, highcharts.src, highmaps, map, offline-exporting, proj4js, us-all, variable-pie}" />
   </component>
 </project>

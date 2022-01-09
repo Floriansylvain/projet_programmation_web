@@ -1,6 +1,7 @@
 let chart1State = false
 let chart2State = false
 let chart3State = false
+let mapState = false
 
 function initYearsChart(results) {
     let categories = []
@@ -68,6 +69,7 @@ function initYearsChart(results) {
     })
 
     chart1State = true
+    console.log("chargment graphique 1 terminé")
 }
 
 function initDisciplinesChart(results) {
@@ -119,7 +121,7 @@ function initEstablishmentsChart(results) {
         let disc = Object.keys(elem)[0]
         let obj = {
             "name" : disc,
-            "y" : parseInt(elem[disc])
+            "y" : parseInt(elem[disc]['number'])
         }
         data.push(obj)
     })
@@ -152,6 +154,70 @@ function initEstablishmentsChart(results) {
     })
 
     chart3State = true
+    console.log("chargment graphique 3 terminé")
+}
+
+function initMapVisuals(data) {
+    const H = Highcharts, map = H.maps['countries/fr/fr-all'];
+
+    Highcharts.mapChart('map', {
+        "title": {
+            "text": "Nombre de thèses soutenues par établissements et leur géolocalisation"
+        },
+        "tooltip": {
+            "pointFormat": "{point.name}<br>" +
+                "Thèses: {point.z}"
+        },
+        "series": [{
+            "name": "Basemap",
+            "mapData": map,
+            "showInLegend": false
+        }, {
+            "name": "Separators",
+            "type": "mapline",
+            "showInLegend": false
+        }, {
+            "type": "mapbubble",
+                "dataLabels": {
+                "enabled": true,
+                "format": "{point.capital}"
+            },
+            "name": "Établissements",
+            "data": data
+        }]
+    });
+    mapState = true
+    console.log("chargement map terminé (les ID des établissements sont complètement cassés dans mon jeu de donnée)")
+}
+
+function initMap(results) {
+    let i = 0
+    let result = []
+
+    results.data.forEach(elem => {
+        let establishment = Object.keys(elem)[0]
+        let id = parseInt(elem[establishment]['ID'])
+        let number = parseInt(elem[establishment]['number'])
+
+        fetch(`https://data.enseignementsup-recherche.gouv.fr/api/records/1.0/search/?dataset=fr-esr-principaux-etablissements-enseignement-superieur&q=${id}&rows=10&fileds=identifiant_idref&fields=identifiant_idref,coordonnees`)
+            .then(response => response.json())
+            .then(data => {
+                if (data["records"].length > 0) {
+                    let coordinates =  data["records"][0]["fields"]["coordonnees"]
+                    let obj = {
+                        "name": establishment,
+                        "lat": coordinates[0],
+                        "lon": coordinates[1],
+                        "z": number
+                    }
+                    result.push(obj)
+                }
+                i += 1
+                if (i === 10) {
+                    initMapVisuals(result)
+                }
+            })
+    })
 }
 
 function initCharts(search, option) {
@@ -171,10 +237,11 @@ function initCharts(search, option) {
     .then(response => response.json())
     .then(results => {
         initEstablishmentsChart(results)
+        initMap(results)
     })
 
     let waitForChartsToLoad = setInterval(function() {
-        if (chart1State && chart2State && chart2State) {
+        if (chart1State && chart2State && chart2State && mapState) {
             chartsState = true
             clearInterval(waitForChartsToLoad);
         }

@@ -260,6 +260,7 @@ function displayResults(results, aCount) {
         currentPage = (parseInt(urlOffset) + RESULTS_NUMBER) / RESULTS_NUMBER
         updatePageNumber(currentPage)
         fadeIn()
+        console.log("chargment liste terminé")
         let waitForPageToLoad = setInterval(function() {
             if (chartsState) {
                 hideLoading()
