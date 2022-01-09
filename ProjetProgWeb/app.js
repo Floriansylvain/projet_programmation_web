@@ -156,7 +156,7 @@ function focusResults(result) {
             elemContent.style.display = 'none'
         } else {
             let display = elemContent.style.display
-            elemContent.style.display = display === 'none' || display === '' ? 'block' : 'none'
+            elemContent.style.display = display === 'none' || display === '' ? 'grid' : 'none'
         }
     })
     fadeIn()

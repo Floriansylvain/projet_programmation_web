@@ -396,6 +396,7 @@ footer svg {
 
 .element-content {
     display: none;
+    grid-template-columns: 1fr 1fr;
 }
 
 .fade-in {
