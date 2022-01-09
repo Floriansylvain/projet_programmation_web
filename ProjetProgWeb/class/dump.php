@@ -16,6 +16,28 @@ class dump {
         return date("Y-m-d", strtotime($old_date));
     }
 
+    public static function convertDBname($name) : string {
+        return array(
+            "author" => "Auteur",
+            "id_author" => "ID Auteur",
+            "title" => "Titre",
+            "these_director" => "Directeur",
+            "these_director_name_lastname" => "Directeur (nom-prenom)",
+            "id_director" => "ID Directeur",
+            "soutenance_establishment" => "Établissement soutenance",
+            "id_establishment" => "ID Établissement",
+            "discipline" => "Discipline",
+            "status" => "Statut",
+            "date_first_registration" => "Date d'enregistrement",
+            "date_soutenance" => "Date soutenance",
+            "language" => "Langue",
+            "id_these" => "ID Thèse",
+            "online" => "En ligne",
+            "date_publication" => "Date publication",
+            "date_update" => "Date dernière mise à jour"
+        )[$name];
+    }
+
     public static function getTheses(string $search, string $option, int $offset) : array {
         $theses_array = [];
 
@@ -47,10 +69,10 @@ class dump {
 
         $i = 0;
         while ($obj = $stmt->fetchObject()) {
-            $theses_array[$i] = array();
-            foreach ($obj as $elem) {
+            $theses_array[] = array();
+            foreach ($obj as $key=>$value) {
                 // TODO Mettre le nom du champ à la place du vide
-                $theses_array[$i][] = empty($elem) ? "Non définit" : $elem;
+                $theses_array[$i][dump::convertDBname($key)] = empty($value) ? "Non définit" : $value;
             }
             $i++;
         }
