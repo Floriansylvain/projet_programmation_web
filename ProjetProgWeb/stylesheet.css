@@ -430,7 +430,8 @@ footer svg {
     width: 90%;
     padding: 10px;
     position: fixed;
-    bottom: 10px;
+    bottom: 85px;
+    z-index: 40;
     align-self: center;
 }
 
@@ -587,8 +588,6 @@ footer svg {
 .page-nav p {
     cursor: pointer;
 }
-
-/*TODO Faire le visuel du site sur plus grand écrans que smmartphone*/
 
 #charts {
     display: none;
