@@ -214,7 +214,7 @@ function initMap(results) {
                     result.push(obj)
                 }
                 i += 1
-                if (i === 10) {
+                if (i === results.data.length) {
                     initMapVisuals(result)
                 }
             })
