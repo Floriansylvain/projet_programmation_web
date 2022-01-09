@@ -172,7 +172,7 @@ function displayResults(results, aCount) {
         hideLoading()
         showError(results.message)
     } else if (results.status === 200) {
-        if (urlCharts === "enabled") {
+        if (urlCharts === "enabled" && aCount > 0) {
             initCharts(searchString, queryOption)
         } else {
             chartsState = true
@@ -268,7 +268,7 @@ function displayResults(results, aCount) {
         let waitForPageToLoad = setInterval(function() {
             if (chartsState) {
                 hideLoading()
-                if (urlCharts === "enabled") {
+                if (urlCharts === "enabled" && aCount > 0) {
                     showCharts()
                 }
                 clearInterval(waitForPageToLoad);
