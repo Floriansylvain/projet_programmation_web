@@ -71,7 +71,6 @@ class dump {
         while ($obj = $stmt->fetchObject()) {
             $theses_array[] = array();
             foreach ($obj as $key=>$value) {
-                // TODO Mettre le nom du champ à la place du vide
                 $theses_array[$i][dump::convertDBname($key)] = empty($value) ? "Non définit" : $value;
             }
             $i++;
