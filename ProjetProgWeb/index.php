@@ -11,6 +11,8 @@
             include("navbar.php");
         ?>
 
+        <div class="background-loading"></div>
+
         <!-- La petite animation de chargement provient de :
              https://freefrontend.com/css-spinners/
              Réalisée par Jon Marron -->
@@ -25,6 +27,12 @@
                     <circle class="point three" cx="75" cy="70" r="5" />
                 </g>
             </svg>
+        </div>
+
+        <div id="charts">
+            <div class="chart" id="years"></div>
+            <div class="chart" id="disciplines"></div>
+            <div class="chart" id="establishments"></div>
         </div>
 
         <div id="results-count"></div>
@@ -55,6 +63,7 @@
         <!-- TODO Footer avec lien vers depot github -->
 
         <script src="https://code.highcharts.com/highcharts.src.js"></script>
+        <script src="charts.js"></script>
         <script src="app.js"></script>
 
     </body>

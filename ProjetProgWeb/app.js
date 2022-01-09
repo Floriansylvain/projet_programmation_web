@@ -24,6 +24,46 @@ let pagesNumbers = document.querySelector('.page-nav div')
 let resultsDiv = document.querySelector('#results')
 let resultsCount = document.querySelector('#results-count')
 let filters = document.querySelectorAll('.filters p')
+let backgroundLoading = document.querySelector('.background-loading')
+let charts = document.querySelector('#charts')
+
+let chartsState = false
+
+function hideLoading() {
+    loader.style.display = "none"
+    backgroundLoading.style.display = "none"
+    document.body.style.height = "auto"
+    document.body.style.overflow = "scroll"
+}
+
+function showLoading() {
+    loader.style.display = "block"
+    backgroundLoading.style.display = "block"
+    document.body.style.height = "100%"
+    document.body.style.overflow = "hidden"
+}
+
+function hideError() {
+    error.classList.replace('fade-in', 'fade-out')
+    let errorDisplay = window.setTimeout(function () {
+        error.style.display = "none"
+    }, 250)
+}
+
+function showError(message) {
+    error.style.display = "flex"
+    error.classList.remove("fade-out");
+    error.classList.add("fade-in");
+    errorMessage.innerHTML = message
+}
+
+function hideCharts() {
+    // TODO À faire notamment pour le toggle switch qui alterne le site avec et sans charts
+}
+
+function showCharts() {
+    charts.style.display = "flex"
+}
 
 function sanitize(chain) {
     return chain.replace(/[^a-zA-Z0-9\- ]/g, '')
@@ -65,8 +105,8 @@ function apiRequestThese(search, offset) {
         lastRequest = new Date().getTime()
         emptyResults(true)
         pagesNumbers.innerHTML = ""
-        loader.style.display = "block"
-        pagesNumbersContainer.style.display = 'none'
+        showLoading()
+        pagesNumbersContainer.style.display = "none"
         searchString = sanitize(search)
         fetch(`api.php?q=theses&search=${searchString}&option=${queryOption}&offset=${offset}`)
             .then(response => response.json())
@@ -129,11 +169,10 @@ let currentPage = null
 
 function displayResults(results, aCount) {
     if (results.status === 400) {
-        loader.style.display = "none"
-        error.classList.remove("fade-out");
-        error.classList.add("fade-in");
-        errorMessage.innerHTML = results.message
+        hideLoading()
+        showError(results.message)
     } else if (results.status === 200) {
+        initCharts(searchString, queryOption)
         count = aCount
         resultsArray = []
         pagesNumbersContainer.style.display = 'flex'
@@ -144,12 +183,12 @@ function displayResults(results, aCount) {
 
             let header = document.createElement('div')
 
-            let qTitle = elem[3]
+            let qTitle = elem[2]
             let title = document.createElement('h3')
             let pre_replacement = new RegExp(searchString, 'gi').exec(qTitle)
             title.innerHTML = qTitle.replace(pre_replacement, `<mark>${pre_replacement}</mark>`)
 
-            let qAuthor = elem[1]
+            let qAuthor = elem[0]
             let author = document.createElement('p')
             pre_replacement = new RegExp(searchString, 'gi').exec(qAuthor)
             author.innerHTML = qAuthor.replace(pre_replacement, `<mark>${pre_replacement}</mark>`)
@@ -159,11 +198,11 @@ function displayResults(results, aCount) {
 
             let onlineButton = document.createElement('button')
             onlineButton.innerHTML = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\"><path d=\"M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm1 16.057v-3.057h2.994c-.059 1.143-.212 2.24-.456 3.279-.823-.12-1.674-.188-2.538-.222zm1.957 2.162c-.499 1.33-1.159 2.497-1.957 3.456v-3.62c.666.028 1.319.081 1.957.164zm-1.957-7.219v-3.015c.868-.034 1.721-.103 2.548-.224.238 1.027.389 2.111.446 3.239h-2.994zm0-5.014v-3.661c.806.969 1.471 2.15 1.971 3.496-.642.084-1.3.137-1.971.165zm2.703-3.267c1.237.496 2.354 1.228 3.29 2.146-.642.234-1.311.442-2.019.607-.344-.992-.775-1.91-1.271-2.753zm-7.241 13.56c-.244-1.039-.398-2.136-.456-3.279h2.994v3.057c-.865.034-1.714.102-2.538.222zm2.538 1.776v3.62c-.798-.959-1.458-2.126-1.957-3.456.638-.083 1.291-.136 1.957-.164zm-2.994-7.055c.057-1.128.207-2.212.446-3.239.827.121 1.68.19 2.548.224v3.015h-2.994zm1.024-5.179c.5-1.346 1.165-2.527 1.97-3.496v3.661c-.671-.028-1.329-.081-1.97-.165zm-2.005-.35c-.708-.165-1.377-.373-2.018-.607.937-.918 2.053-1.65 3.29-2.146-.496.844-.927 1.762-1.272 2.753zm-.549 1.918c-.264 1.151-.434 2.36-.492 3.611h-3.933c.165-1.658.739-3.197 1.617-4.518.88.361 1.816.67 2.808.907zm.009 9.262c-.988.236-1.92.542-2.797.9-.89-1.328-1.471-2.879-1.637-4.551h3.934c.058 1.265.231 2.488.5 3.651zm.553 1.917c.342.976.768 1.881 1.257 2.712-1.223-.49-2.326-1.211-3.256-2.115.636-.229 1.299-.435 1.999-.597zm9.924 0c.7.163 1.362.367 1.999.597-.931.903-2.034 1.625-3.257 2.116.489-.832.915-1.737 1.258-2.713zm.553-1.917c.27-1.163.442-2.386.501-3.651h3.934c-.167 1.672-.748 3.223-1.638 4.551-.877-.358-1.81-.664-2.797-.9zm.501-5.651c-.058-1.251-.229-2.46-.492-3.611.992-.237 1.929-.546 2.809-.907.877 1.321 1.451 2.86 1.616 4.518h-3.933z\"/></svg>"
-            if (elem[15] === 'no') {
+            if (elem[14] === 'no') {
                 onlineButton.disabled = true
             } else {
                 onlineButton.onclick = function () {
-                    window.open('https://www.theses.fr/' + elem[14] + '/document', ',_blank')
+                    window.open('https://www.theses.fr/' + elem[13] + '/document', ',_blank')
                 }
             }
 
@@ -197,8 +236,6 @@ function displayResults(results, aCount) {
             ${new Intl.NumberFormat('fr-FR', {maximumSignificantDigits: 3}).format(count)}.`
         resultsCount.appendChild(nb)
 
-        loader.style.display = "none"
-
         nbPages = Math.ceil(count / RESULTS_NUMBER)
 
         for (let i = 0; i < nbPages; i++) {
@@ -223,6 +260,13 @@ function displayResults(results, aCount) {
         currentPage = (parseInt(urlOffset) + RESULTS_NUMBER) / RESULTS_NUMBER
         updatePageNumber(currentPage)
         fadeIn()
+        let waitForPageToLoad = setInterval(function() {
+            if (chartsState) {
+                hideLoading()
+                showCharts()
+                clearInterval(waitForPageToLoad);
+            }
+        }, 100)
     }
 }
 
@@ -264,7 +308,7 @@ function realTimeDisplay() {
                         name.innerHTML = elem
                         name.addEventListener('click', () => {
                             searchBar.value = elem
-                            apiRequestThese(elem, 0)
+                            submitForm(urlOffset)
                         })
                         suggestions.appendChild(name)
                     })
@@ -326,7 +370,7 @@ document.addEventListener('click', e => {
         }
 
         if (e.target === errorButton || e.target === errorButton.firstElementChild) {
-            error.classList.replace('fade-in', 'fade-out')
+            hideError()
         }
 
         let toggleSwitch = null

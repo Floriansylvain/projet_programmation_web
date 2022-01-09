@@ -231,7 +231,7 @@ class dump {
                   OR soutenance_establishment LIKE :search
                 GROUP BY Discipline
                 ORDER BY `Number` DESC
-                LIMIT 10
+                LIMIT 10;
             "),
             'author' => $pdo->prepare("SELECT discipline AS Discipline, COUNT(discipline) AS Number FROM theses WHERE author LIKE :search GROUP BY Discipline ORDER BY `Number` DESC LIMIT 10;"),
             'title' => $pdo->prepare("SELECT discipline AS Discipline, COUNT(discipline) AS Number FROM theses WHERE title LIKE :search GROUP BY Discipline ORDER BY `Number` DESC LIMIT 10;"),
@@ -276,7 +276,8 @@ class dump {
             "),
             'author' => $pdo->prepare("SELECT soutenance_establishment AS Establishment, COUNT(soutenance_establishment) AS Number FROM theses WHERE author LIKE :search GROUP BY Establishment ORDER BY `Number` DESC LIMIT 10;"),
             'title' => $pdo->prepare("SELECT soutenance_establishment AS Establishment, COUNT(soutenance_establishment) AS Number FROM theses WHERE title LIKE :search GROUP BY Establishment ORDER BY `Number` DESC LIMIT 10;"),
-            'director' => $pdo->prepare("SELECT soutenance_establishment AS Establishment, COUNT(soutenance_establishment) AS Number FROM theses WHERE theses.these_director LIKE :search GROUP BY Establishment ORDER BY `Number` DESC LIMIT 10;"),
+            'director' => $pdo->prepare("SELECT soutenance_establishment AS Establishment, COUNT(soutenance_establishment) AS Number FROM theses WHERE these_director LIKE :search GROUP BY Establishment ORDER BY `Number` DESC LIMIT 10;"),
+            'establishment' => $pdo->prepare("SELECT soutenance_establishment AS Establishment, COUNT(soutenance_establishment) AS Number FROM theses WHERE soutenance_establishment LIKE :search GROUP BY Establishment ORDER BY `Number` DESC LIMIT 10;"),
             default => "",
         };
 
