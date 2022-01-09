@@ -439,13 +439,15 @@ let urlCharts = (urlParams.get('charts') === "" ? "enabled" : urlParams.get('cha
 
 updateFilter(urlOption ? urlOption : 'f-auto')
 
-let toRemove = 'untoggle'
-let toAdd = 'toggle'
+let toRemove = "untoggle"
+let toAdd = "toggle"
 
 if (urlCharts === "disabled") {
     toRemove = "toggle"
     toAdd = "untoggle"
 }
+
+switchCharts(urlCharts !== "disabled")
 
 document.querySelector('.switch-charts').classList.remove(toRemove)
 document.querySelector('.switch-charts').classList.add(toAdd)
